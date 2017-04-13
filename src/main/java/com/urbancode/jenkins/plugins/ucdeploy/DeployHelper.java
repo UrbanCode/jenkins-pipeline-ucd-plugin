@@ -195,11 +195,11 @@ public class DeployHelper {
         // deploy
         String snapshot = "";
         Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
-        if (deployVersions.contains("=")) {
+        if (deployVersions.toUpperCase().contains("SNAPSHOT=")) {
             if (deployVersions.contains("\n")) {
                 throw new AbortException("Only a single SNAPSHOT can be specified");
             }
-            snapshot = deployVersions;
+            snapshot = deployVersions.replaceAll("(?i)SNAPSHOT=", "");
             listener.getLogger().println("Deploying SNAPSHOT '" + snapshot + "'");
         }
         else {

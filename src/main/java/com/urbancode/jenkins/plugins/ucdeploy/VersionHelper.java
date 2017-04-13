@@ -295,6 +295,8 @@ public class VersionHelper {
                 propSheetDef = compClient.getComponentVersionPropSheetDef(component);
                 propSheetDefId = (String) propSheetDef.get("id");
                 propSheetDefPath = (String) propSheetDef.get("path");
+                propSheetDefPath = propSheetDefPath.replaceAll("/", "&");
+                listener.getLogger().println("Property Sheet Path is " + propSheetDefPath);
                 existingPropDefJsonArray = propClient.getPropSheetDefPropDefs(propSheetDefPath);
             }
             catch (IOException ex) {
