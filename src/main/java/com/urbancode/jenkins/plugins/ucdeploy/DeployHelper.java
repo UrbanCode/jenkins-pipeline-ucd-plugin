@@ -4,7 +4,7 @@
  * The Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
- 
+
 package com.urbancode.jenkins.plugins.ucdeploy;
 
 import hudson.AbortException;
@@ -195,11 +195,13 @@ public class DeployHelper {
         // deploy
         String snapshot = "";
         Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
-        if (deployVersions.toUpperCase().contains("SNAPSHOT=")) {
+        if (deployVersions.toUpperCase().startsWith("SNAPSHOT=") ||
+                deployVersions.toUpperCase().startsWith("SNAPSHOT:"))
+        {
             if (deployVersions.contains("\n")) {
                 throw new AbortException("Only a single SNAPSHOT can be specified");
             }
-            snapshot = deployVersions.replaceAll("(?i)SNAPSHOT=", "");
+            snapshot = deployVersions.replaceFirst("(?i)SNAPSHOT=|(?i)SNAPSHOT:", "");
             listener.getLogger().println("Deploying SNAPSHOT '" + snapshot + "'");
         }
         else {
