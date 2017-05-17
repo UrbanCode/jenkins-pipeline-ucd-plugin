@@ -13,6 +13,8 @@ Plug-ins downloaded directly from the [IBM UrbanCode Plug-ins microsite](https:/
 This open source plug-in uses Gradle as its build tool. [Install the latest version of Gradle](https://gradle.org/install) to build the plug-in locally. Build the plug-in by running the `gradle` command in the plug-in's root directory. The plug-in distributable will be placed under the `build/libs` folder.
 
 ## Pipeline Examples
+Full explanation of these Pipeline syntax examples can be found on our [Jenkins Pipeline Syntax](https://developer.ibm.com/urbancode/plugindoc/ibmucd/jenkins-pipeline-formerly-jenkins-2-0/2-2/jenkins-pipeline-syntax-overview/) documentation.
+
 ### Create Component Version
 ```groovy
 node {
@@ -33,8 +35,7 @@ node {
                 fileIncludePatterns: '*.zip',
                 fileExcludePatterns: '',
                 pushProperties: 'jenkins.server=Local\njenkins.reviewed=false',
-                pushDescription: 'Pushed from Jenkins',
-                pushIncremental: false
+                pushDescription: 'Pushed from Jenkins'
             ]
         ]
     ])
@@ -46,6 +47,10 @@ node {
 node {
    step([$class: 'UCDeployPublisher',
         siteName: 'local',
+        component: [
+            $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
+            componentName: 'Jenkins'
+        ],
         deploy: [
             $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
             deployApp: 'Jenkins',
