@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.5
+RFE 104275 - Support for Description and Application Request Properties on deployments.
+
 ### Version 2.4
 Fixed APAR PI80038 - Snapshot names no longer require a leading equals sign.
 
@@ -100,7 +103,7 @@ Fixed APAR PI80038 - Snapshot names no longer require a leading equals sign.
 Fixed APAR PI77548 - Component process properties failing to resolve on deployment.
 
 ### Version 2.2
-Fixed RFE 98375 - Jenkins Plugin only allows Global credentials instead of job-based credentials.
+RFE 98375 - Jenkins Plugin only allows Global credentials instead of job-based credentials.
 
 Fixed PI75045 - UCD server maintenance mode check requires admin privileges.
 

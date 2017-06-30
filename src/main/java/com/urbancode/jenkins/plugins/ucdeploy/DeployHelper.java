@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -39,7 +40,6 @@ public class DeployHelper {
     private ApplicationClient appClient;
     private TaskListener listener;
     private EnvVars envVars;
-    private String description = "Requested from Jenkins";
 
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
         appClient = new ApplicationClient(ucdUrl, httpClient);
@@ -54,6 +54,8 @@ public class DeployHelper {
         private CreateProcessBlock createProcess;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
+        private String deployReqProps;
+        private String deployDesc;
         private Boolean deployOnlyChanged;
 
         @DataBoundConstructor
@@ -64,6 +66,8 @@ public class DeployHelper {
             CreateProcessBlock createProcess,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
+            String deployReqProps,
+            String deployDesc,
             Boolean deployOnlyChanged)
         {
             this.deployApp = deployApp;
@@ -72,6 +76,8 @@ public class DeployHelper {
             this.createProcess = createProcess;
             this.createSnapshot = createSnapshot;
             this.deployVersions = deployVersions;
+            this.deployReqProps = deployReqProps;
+            this.deployDesc = deployDesc;
             this.deployOnlyChanged = deployOnlyChanged;
         }
 
@@ -137,6 +143,24 @@ public class DeployHelper {
             }
         }
 
+        public String getDeployReqProps() {
+            if (deployReqProps != null) {
+                return deployReqProps;
+            }
+            else {
+                return "";
+            }
+        }
+
+        public String getDeployDesc() {
+            if (deployDesc != null) {
+                return deployDesc;
+            }
+            else {
+                return "";
+            }
+        }
+
         public Boolean getDeployOnlyChanged() {
             if (deployOnlyChanged != null) {
                 return deployOnlyChanged;
@@ -171,6 +195,8 @@ public class DeployHelper {
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
+        String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
+        String deployDesc = envVars.expand(deployBlock.getDeployDesc());
 
         // create process
         if (deployBlock.createProcessChecked()) {
@@ -208,17 +234,33 @@ public class DeployHelper {
             listener.getLogger().println("Deploying component versions '" + componentVersions + "'");
         }
 
+        Map<String, String> requestProperties = readProperties(deployReqProps);
+
         listener.getLogger().println("Starting deployment process '" + deployProc + "' of application '" + deployApp +
                                      "' in environment '" + deployEnv + "'");
         UUID appProcUUID;
         try {
+            // Confirm all application request properties are fulfilled (not done by UCD)
+            JSONArray unfilledProps = appClient.checkUnfilledApplicationProcessRequestProperties(deployApp,
+                    deployProc, requestProperties);
+            if (unfilledProps.length() > 0) {
+                List<String> props = new ArrayList<String>();
+                for (int i = 0; i < unfilledProps.length(); i++) {
+                    String propName = unfilledProps.getJSONObject(i).getString("name");
+                    props.add(propName);
+                }
+                throw new AbortException("Required UrbanCode Deploy Application Process request properties were not supplied: " + props.toString());
+            }
+
+            // Run the application process
             appProcUUID = appClient.requestApplicationProcess(deployApp,
                                                               deployProc,
-                                                              description,
+                                                              deployDesc,
                                                               deployEnv,
                                                               snapshot,
                                                               deployBlock.getDeployOnlyChanged(),
-                                                              componentVersions);
+                                                              componentVersions,
+                                                              requestProperties);
 
         }
         catch (IOException ex) {
@@ -263,11 +305,10 @@ public class DeployHelper {
             try {
                 CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshotBlock();
                 String snapshotName = envVars.expand(createSnapshot.getSnapshotName());
-                String description = "Snapshot of successful build environment.";
 
                 listener.getLogger().println("Creating environment snapshot '" + snapshotName
                         + "' in UrbanCode Deploy.");
-                appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, description);
+                appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
                 listener.getLogger().println("Successfully created environment snapshot.");
             }
             catch (IOException ex) {
@@ -322,6 +363,32 @@ public class DeployHelper {
         }
 
         return componentVersions;
+    }
+
+    /**
+     * Load properties into a properties map
+     *
+     * @param properties The unparsed properties to load
+     * @return The loaded properties map
+     * @throws AbortException
+     */
+    private Map<String, String> readProperties(String properties) throws AbortException {
+        Map<String, String> propertiesToSet = new HashMap<String, String>();
+        if (properties != null && properties.length() > 0) {
+            for (String line : properties.split("\n")) {
+                String[] propDef = line.split("=");
+
+                if (propDef.length >= 2) {
+                    String propName = propDef[0].trim();
+                    String propVal = propDef[1].trim();
+                    propertiesToSet.put(propName, propVal);
+                }
+                else {
+                    throw new AbortException("Missing property delimiter '=' in property definition '" + line + "'");
+                }
+            }
+        }
+        return propertiesToSet;
     }
 
     /**

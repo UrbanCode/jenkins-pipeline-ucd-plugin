@@ -47,13 +47,13 @@
                              checked="${instance.createComponentChecked()}">
               <f:block>
                 <table style="width:100%">
-                  <f:entry field="componentTemplate" 
-                           title="Component Template" 
+                  <f:entry field="componentTemplate"
+                           title="Component Template"
                            help="${helpURL}/create/new/template.html">
                     <f:textbox/>
                   </f:entry>
-                  <f:entry field="componentApplication" 
-                           title="Add to Application" 
+                  <f:entry field="componentApplication"
+                           title="Add to Application"
                            help="${helpURL}/create/new/app-name.html">
                     <f:textbox/>
                   </f:entry>
@@ -150,6 +150,12 @@
             </f:optionalBlock>
             <f:entry field="deployVersions" title="Snapshot/Component Versions" help="${helpURL}/deploy/versions.html">
               <f:textarea/>
+            </f:entry>
+            <f:entry field="deployReqProps" title="Request Properties" help="${helpURL}/deploy/reqprops.html">
+              <f:textarea/>
+            </f:entry>
+            <f:entry field="deployDesc" title="Description" help="${helpURL}/deploy/desc.html">
+              <f:textbox default="Requested from Jenkins"/>
             </f:entry>
             <f:entry field="deployOnlyChanged" title="Only Changed Versions" help="${helpURL}/deploy/onlychanged.html">
               <f:checkbox default="true"/>

@@ -98,7 +98,7 @@
     <!-- ==================================================================
          COMPILE
          ================================================================== -->
-    <target name="prepare" depends="resolve">
+    <target name="prepare" depends="resolve" unless="prepare.no">
         <exec executable="${mvn}">
           <arg value="--batch-mode"/>
           <arg value="install:install-file"/>
