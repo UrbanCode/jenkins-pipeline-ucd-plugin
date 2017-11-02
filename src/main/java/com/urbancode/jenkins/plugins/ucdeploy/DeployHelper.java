@@ -214,9 +214,10 @@ public class DeployHelper {
         if (deployProc.isEmpty()) {
             throw new AbortException("Deploy Process is a required field for deployment.");
         }
+        /* Not required for operational processes
         if (deployVersions.isEmpty()) {
             throw new AbortException("Deploy Versions is a required field for deployment.");
-        }
+        }*/
 
         // deploy
         String snapshot = "";
