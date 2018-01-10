@@ -4,7 +4,7 @@
  * The Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
- 
+
 package com.urbancode.jenkins.plugins.ucdeploy;
 
 import hudson.Extension;
@@ -117,14 +117,13 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
                 @QueryParameter("url") final String url,
                 @QueryParameter("user") final String user,
                 @QueryParameter("password") final String password,
-                @QueryParameter("adminUser") final boolean adminUser,
                 @QueryParameter("trustAllCerts") final boolean trustAllCerts)
         throws IOException, ServletException {
             new FormFieldValidator(req, rsp, true) {
                 @Override
                 protected void check() throws IOException, ServletException {
                     try {
-                        UCDeploySite site = new UCDeploySite(null, url, user, password, adminUser, trustAllCerts);
+                        UCDeploySite site = new UCDeploySite(null, url, user, password, trustAllCerts);
                         site.verifyConnection();
                         ok("Success");
                     }

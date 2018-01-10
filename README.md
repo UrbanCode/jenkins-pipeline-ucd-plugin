@@ -93,6 +93,10 @@ node {
 ```
 
 ## Release Notes
+### Version 2.8
+Fixed all Null pointer and bad casting exceptions returned in Jenkins system logs upon saving a job.
+Removed administrative checkbox from global and job configuration of user credentials.
+
 ### Version 2.7
 Fixed APAR PI91900 - Unfilled application process properties unable to be checked with a snapshot.
 ### Version 2.6

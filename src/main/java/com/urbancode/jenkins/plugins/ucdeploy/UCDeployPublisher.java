@@ -46,7 +46,6 @@ import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Push;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.DeployBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.CreateSnapshotBlock;
-import com.urbancode.jenkins.plugins.ucdeploy.SystemHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper.VersionBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.UCDeployPublisher.UserBlock;
@@ -103,7 +102,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean altUserChecked() {
-        if (getAltUser() != null) {
+        if (altUser != null) {
             return true;
         }
 
@@ -112,10 +111,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getAltUsername() {
         String altUsername = "";
-        String value = getAltUser().getAltUsername();
 
-        if (value != null) {
-            altUsername = value;
+        if (altUser != null) {
+            altUsername = altUser.getAltUsername();
         }
 
         return altUsername;
@@ -123,17 +121,12 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public Secret getAltPassword() {
         Secret altPassword = Secret.fromString("");
-        Secret value = getAltUser().getAltPassword();
 
-        if (value != null) {
-            altPassword = value;
+        if (altUser != null) {
+            altPassword = altUser.getAltPassword();
         }
 
         return altPassword;
-    }
-
-    public boolean isAltUserAdmin() {
-        return getAltUser().isAdminUser();
     }
 
     public VersionBlock getComponent() {
@@ -141,7 +134,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean componentChecked() {
-        if (getComponent() != null) {
+        if (component != null) {
             return true;
         }
 
@@ -150,17 +143,21 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getComponentName() {
         String componentName = "";
-        String value = getComponent().getComponentName();
 
-        if (value != null) {
-            componentName = value;
+        if (component != null) {
+            componentName = component.getComponentName();
         }
 
         return componentName;
     }
 
     public CreateComponentBlock getCreateComponent() {
-        return getComponent().getCreateComponentBlock();
+        if (component != null) {
+            return component.getCreateComponentBlock();
+        }
+        else {
+            return null;
+        }
     }
 
     public Boolean createComponentChecked() {
@@ -173,10 +170,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getComponentTemplate() {
         String componentTemplate = "";
-        String value = getCreateComponent().getComponentTemplate();
 
-        if (value != null) {
-            componentTemplate = value;
+        if (getCreateComponent() != null) {
+            componentTemplate = getCreateComponent().getComponentTemplate();
         }
 
         return componentTemplate;
@@ -184,25 +180,28 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getComponentApplication() {
         String componentApplication = "";
-        String value = getCreateComponent().getComponentApplication();
 
-        if (value != null) {
-            componentApplication = value;
+        if (getCreateComponent() != null) {
+            componentApplication = getCreateComponent().getComponentApplication();
         }
 
         return componentApplication;
     }
 
     public DeliveryBlock getDelivery() {
-        return getComponent().getDeliveryBlock();
+        if (component != null) {
+            return component.getDeliveryBlock();
+        }
+        else {
+            return null;
+        }
     }
 
     public String getDeliveryType() {
         String deliveryType = "";
-        String value = getDelivery().getDeliveryType().name();
 
-        if (value != null) {
-            deliveryType = value;
+        if (getDelivery() != null) {
+            deliveryType = getDelivery().getDeliveryType().name();
         }
 
         return deliveryType;
@@ -210,10 +209,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getPushVersion() {
         String pushVersion = "";
-        String value = ((Push)getDelivery()).getPushVersion();
 
-        if (value != null) {
-            pushVersion = value;
+        if (getDelivery() != null && getDelivery() instanceof Push) {
+            pushVersion = ((Push)getDelivery()).getPushVersion();
         }
 
         return pushVersion;
@@ -221,10 +219,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getBaseDir() {
         String baseDir = "";
-        String value = ((Push)getDelivery()).getBaseDir();
 
-        if (value != null) {
-            baseDir = value;
+        if (getDelivery() != null && getDelivery() instanceof Push) {
+            baseDir = ((Push)getDelivery()).getBaseDir();
         }
 
         return baseDir;
@@ -232,10 +229,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getFileIncludePatterns() {
         String fileIncludePatterns = "";
-        String value = ((Push)getDelivery()).getFileIncludePatterns();
 
-        if (value != null) {
-            fileIncludePatterns = value;
+        if (getDelivery() != null && getDelivery() instanceof Push) {
+            fileIncludePatterns = ((Push)getDelivery()).getFileIncludePatterns();
         }
 
         return fileIncludePatterns;
@@ -243,10 +239,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getFileExcludePatterns() {
         String fileExcludePatterns = "";
-        String value = ((Push)getDelivery()).getFileExcludePatterns();
 
-        if (value != null) {
-            fileExcludePatterns = value;
+        if (getDelivery() != null && getDelivery() instanceof Push) {
+            fileExcludePatterns = ((Push)getDelivery()).getFileExcludePatterns();
         }
 
         return fileExcludePatterns;
@@ -254,10 +249,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getPushProperties() {
         String pushProperties = "";
-        String value = ((Push)getDelivery()).getPushProperties();
 
-        if (value != null) {
-            pushProperties = value;
+        if (getDelivery() != null && getDelivery() instanceof Push) {
+            pushProperties = ((Push)getDelivery()).getPushProperties();
         }
 
         return pushProperties;
@@ -265,30 +259,27 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getPushDescription() {
         String pushDescription = "";
-        String value = ((Push)getDelivery()).getPushDescription();
 
-        if (value != null) {
-            pushDescription = value;
+        if (getDelivery() != null && getDelivery() instanceof Push) {
+            pushDescription = ((Push)getDelivery()).getPushDescription();
         }
 
         return pushDescription;
     }
 
     public Boolean getPushIncremental() {
-        if (((Push)getDelivery()).getPushIncremental() != null) {
-            return false;
-        }
-        else {
+        if (getDelivery() != null && getDelivery() instanceof Push) {
             return ((Push)getDelivery()).getPushIncremental();
         }
+
+        return false;
     }
 
     public String getPullProperties() {
         String pullProperties = "";
-        String value = ((Pull)getDelivery()).getPullProperties();
 
-        if (value != null) {
-            pullProperties = value;
+        if (getDelivery() != null && getDelivery() instanceof Pull) {
+            pullProperties = ((Pull)getDelivery()).getPullProperties();
         }
 
         return pullProperties;
@@ -296,10 +287,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getpullSourceType() {
         String pullSourceType = "";
-        String value = ((Pull)getDelivery()).getPullSourceType();
 
-        if (value != null) {
-            pullSourceType = value;
+        if (getDelivery() != null && getDelivery() instanceof Pull) {
+            pullSourceType = ((Pull)getDelivery()).getPullSourceType();
         }
 
         return pullSourceType;
@@ -307,22 +297,20 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getPullSourceProperties() {
         String pullSourceProperties = "";
-        String value = ((Pull)getDelivery()).getPullSourceProperties();
 
-        if (value != null) {
-            pullSourceProperties = value;
+        if (getDelivery() != null && getDelivery() instanceof Pull) {
+            pullSourceProperties = ((Pull)getDelivery()).getPullSourceProperties();
         }
 
         return pullSourceProperties;
     }
 
     public Boolean getPullIncremental() {
-        if (((Pull)getDelivery()).getPullIncremental() == null) {
-            return false;
-        }
-        else {
+        if (getDelivery() != null && getDelivery() instanceof Pull) {
             return ((Pull)getDelivery()).getPullIncremental();
         }
+
+        return false;
     }
 
     public DeployBlock getDeploy() {
@@ -330,7 +318,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean deployChecked() {
-        if (getDeploy() != null) {
+        if (deploy != null) {
             return true;
         }
 
@@ -339,10 +327,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getDeployApp() {
         String deployApp = "";
-        String value = getDeploy().getDeployApp();
 
-        if (value != null) {
-            deployApp = value;
+        if (deploy != null) {
+            deployApp = deploy.getDeployApp();
         }
 
         return deployApp;
@@ -350,10 +337,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getDeployEnv() {
         String deployEnv = "";
-        String value = getDeploy().getDeployEnv();
 
-        if (value != null) {
-            deployEnv = value;
+        if (deploy != null) {
+            deployEnv = deploy.getDeployEnv();
         }
 
         return deployEnv;
@@ -361,17 +347,16 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getDeployProc() {
         String deployProc = "";
-        String value = getDeploy().getDeployProc();
 
-        if (value != null) {
-            deployProc = value;
+        if (deploy != null) {
+            deployProc = deploy.getDeployProc();
         }
 
         return deployProc;
     }
 
     public CreateProcessBlock getCreateProcess() {
-        return getDeploy().getCreateProcessBlock();
+        return deploy.getCreateProcessBlock();
     }
 
     public Boolean createProcessChecked() {
@@ -385,17 +370,16 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getProcessComponent() {
         String processComponent = "";
-        String value = getCreateProcess().getProcessComponent();
 
-        if (value != null) {
-            processComponent = value;
+        if (getCreateProcess() != null) {
+            processComponent = getCreateProcess().getProcessComponent();
         }
 
         return processComponent;
     }
 
     public CreateSnapshotBlock getCreateSnapshot() {
-        return getDeploy().getCreateSnapshotBlock();
+        return deploy.getCreateSnapshotBlock();
     }
 
     public Boolean createSnapshotChecked() {
@@ -409,10 +393,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getSnapshotName() {
         String snapshotName = "";
-        String value = getCreateSnapshot().getSnapshotName();
 
-        if (value != null) {
-            snapshotName = value;
+        if (getCreateSnapshot() != null) {
+            snapshotName = getCreateSnapshot().getSnapshotName();
         }
 
         return snapshotName;
@@ -420,10 +403,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getDeployVersions() {
         String deployVersions = "";
-        String value = getDeploy().getDeployVersions();
 
-        if (value != null) {
-            deployVersions = value;
+        if (deploy != null) {
+            deployVersions = deploy.getDeployVersions();
         }
 
         return deployVersions;
@@ -431,10 +413,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getDeployReqProps() {
         String deployReqProps = "";
-        String value = getDeploy().getDeployReqProps();
 
-        if (value != null) {
-            deployReqProps = value;
+        if (deploy != null) {
+            deployReqProps = deploy.getDeployReqProps();
         }
 
         return deployReqProps;
@@ -442,17 +423,16 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public String getDeployDesc() {
         String deployDesc = "";
-        String value = getDeploy().getDeployDesc();
 
-        if (value != null) {
-            deployDesc = value;
+        if (deploy != null) {
+            deployDesc = deploy.getDeployDesc();
         }
 
         return deployDesc;
     }
 
     public Boolean getDeployOnlyChanged() {
-        if (getDeploy().getDeployOnlyChanged() == null) {
+        if (deploy.getDeployOnlyChanged() == null) {
             return false;
         }
         else {
@@ -503,7 +483,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
         UCDeploySite udSite = getSite();
         DefaultHttpClient udClient;  // not serializable
-        boolean adminUser = false;
 
         if (altUserChecked()) {
             if (getAltUsername().equals("")) {
@@ -514,22 +493,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Running job as alternative user '" + getAltUsername() + "'.");
 
             udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
-            adminUser = isAltUserAdmin();
         }
         else {
             udClient = udSite.getClient();
-            adminUser = udSite.isAdminUser();
-        }
-
-        if (adminUser) {
-            SystemHelper sysHelper = new SystemHelper(udSite.getUri(), udClient, listener);
-
-            listener.getLogger().println("Administrative user specified. Checking if server is running in "
-                    + "maintenance mode.");
-            if (sysHelper.isMaintenanceEnabled()) {
-                throw new AbortException("The UrbanCode Deploy server is running in maintenance mode "
-                        + "and no processes may be run.");
-            }
         }
 
         EnvVars envVars = build.getEnvironment(listener);
@@ -557,13 +523,11 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     public static class UserBlock implements Serializable {
         private String altUsername;
         private Secret altPassword;
-        private boolean adminUser;
 
         @DataBoundConstructor
-        public UserBlock(String altUsername, Secret altPassword, boolean adminUser) {
+        public UserBlock(String altUsername, Secret altPassword) {
             this.altUsername = altUsername;
             this.altPassword = altPassword;
-            this.adminUser = adminUser;
         }
 
         public String getAltUsername() {
@@ -580,14 +544,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
         public void setAltPassword(Secret altPassword) {
             this.altPassword = altPassword;
-        }
-
-        public boolean isAdminUser() {
-            return adminUser;
-        }
-
-        public void setAdminUser(boolean adminUser) {
-            this.adminUser = adminUser;
         }
     }
 

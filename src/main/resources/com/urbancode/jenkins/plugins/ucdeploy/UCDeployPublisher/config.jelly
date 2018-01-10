@@ -23,9 +23,6 @@
             <f:entry title="Alternative Password" field="altPassword" help="${helpURL}/alt-password.html">
               <f:password/>
             </f:entry>
-            <f:entry title="Administrative User" field="adminUser" help="${helpURL}/admin-user.html">
-              <f:checkbox name="adminUser" checked="${instance.isAltUserAdmin()}"/>
-            </f:entry>
           </table>
         </f:block>
       </f:optionalBlock>

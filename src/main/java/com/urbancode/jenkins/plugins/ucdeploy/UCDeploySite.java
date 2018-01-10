@@ -4,7 +4,7 @@
  * The Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
- 
+
 package com.urbancode.jenkins.plugins.ucdeploy;
 
 import com.urbancode.ud.client.UDRestClient;
@@ -44,8 +44,6 @@ public class UCDeploySite implements Serializable {
 
     private Secret password;
 
-    private boolean adminUser;
-
     private boolean trustAllCerts;
 
     transient private DefaultHttpClient client;
@@ -64,7 +62,6 @@ public class UCDeploySite implements Serializable {
      * @param url the url of the UrbanDeploy instance
      * @param user
      * @param password
-     * @param adminUser
      * @param trustAllCerts
      */
     public UCDeploySite(
@@ -72,14 +69,12 @@ public class UCDeploySite implements Serializable {
             String url,
             String user,
             Secret password,
-            boolean adminUser,
             boolean trustAllCerts)
     {
         this.profileName = profileName;
         this.url = url;
         this.user = user;
         this.password = password;
-        this.adminUser = adminUser;
         this.trustAllCerts = trustAllCerts;
         client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
     }
@@ -91,7 +86,6 @@ public class UCDeploySite implements Serializable {
      * @param url
      * @param user
      * @param password
-     * @param adminUser
      * @param trustAllCerts
      */
     @DataBoundConstructor
@@ -100,10 +94,9 @@ public class UCDeploySite implements Serializable {
             String url,
             String user,
             String password,
-            boolean adminUser,
             boolean trustAllCerts)
     {
-        this(profileName, url, user, Secret.fromString(password), adminUser, trustAllCerts);
+        this(profileName, url, user, Secret.fromString(password), trustAllCerts);
     }
 
     public DefaultHttpClient getClient() {
@@ -223,24 +216,6 @@ public class UCDeploySite implements Serializable {
      */
     public void setPassword(Secret password) {
         this.password = password;
-    }
-
-    /**
-     * Gets adminUser
-     *
-     * @return if the user set on this client has administrative credentials
-     */
-    public boolean isAdminUser() {
-        return adminUser;
-    }
-
-    /**
-     * Sets adminUser to set if this user has administrative credentials
-     *
-     * @param adminUser
-     */
-    public void setAdminUser(boolean adminUser) {
-        this.adminUser = adminUser;
     }
 
     /**
