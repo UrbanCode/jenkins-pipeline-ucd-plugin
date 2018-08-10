@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.9
+Fixed 401 http error when setting version properties by using latest uDeployRestClient.
+
 ### Version 2.8
 Fixed all Null pointer and bad casting exceptions returned in Jenkins system logs upon saving a job.
 Removed administrative checkbox from global and job configuration of user credentials.
