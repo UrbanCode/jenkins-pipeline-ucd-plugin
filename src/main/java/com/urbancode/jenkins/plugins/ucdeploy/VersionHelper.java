@@ -91,12 +91,12 @@ public class VersionHelper {
             }
         }
 
-        public CreateComponentBlock getCreateComponentBlock() {
+        public CreateComponentBlock getCreateComponent() {
             return createComponent;
         }
 
         public Boolean createComponentChecked() {
-            if (getCreateComponentBlock() == null) {
+            if (getCreateComponent() == null) {
                 return false;
             }
             else {
@@ -104,7 +104,7 @@ public class VersionHelper {
             }
         }
 
-        public DeliveryBlock getDeliveryBlock() {
+        public DeliveryBlock getDelivery() {
             return delivery;
         }
     }
@@ -130,8 +130,8 @@ public class VersionHelper {
         // create component
         if (versionBlock.createComponentChecked()) {
             componentHelper.createComponent(componentName,
-                                            versionBlock.getCreateComponentBlock(),
-                                            versionBlock.getDeliveryBlock());
+                                            versionBlock.getCreateComponent(),
+                                            versionBlock.getDelivery());
         }
 
         // tag component
@@ -140,8 +140,8 @@ public class VersionHelper {
         }
 
         // create version
-        if (versionBlock.getDeliveryBlock().getDeliveryType() == DeliveryBlock.DeliveryType.Push) {
-            Push pushBlock = (Push)versionBlock.getDeliveryBlock();
+        if (versionBlock.getDelivery().getDeliveryType() == DeliveryBlock.DeliveryType.Push) {
+            Push pushBlock = (Push)versionBlock.getDelivery();
             String version = envVars.expand(pushBlock.getPushVersion());
             listener.getLogger().println("Creating new component version '" + version + "' on component '" + componentName +
                                          "'");
@@ -186,8 +186,8 @@ public class VersionHelper {
         }
 
         // import version
-        else if (versionBlock.getDeliveryBlock().getDeliveryType() == DeliveryBlock.DeliveryType.Pull) {
-            Pull pullBlock = (Pull)versionBlock.getDeliveryBlock();
+        else if (versionBlock.getDelivery().getDeliveryType() == DeliveryBlock.DeliveryType.Pull) {
+            Pull pullBlock = (Pull)versionBlock.getDelivery();
 
             Map<String, String> mappedProperties = DeliveryBlock.mapProperties(envVars.expand(pullBlock.getPullProperties()));
             listener.getLogger().println("Using runtime properties " + mappedProperties);
@@ -206,7 +206,7 @@ public class VersionHelper {
 
         // invalid type
         else {
-            throw new AbortException("Invalid Delivery Type: " + versionBlock.getDeliveryBlock().getDeliveryType());
+            throw new AbortException("Invalid Delivery Type: " + versionBlock.getDelivery().getDeliveryType());
         }
     }
 

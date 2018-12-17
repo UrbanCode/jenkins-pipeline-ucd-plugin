@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.10
+Added functionality to preemptively create environment snapshot to use during deployment.
+
 ### Version 2.9
 Fixed 401 http error when setting version properties by using latest uDeployRestClient.
 

@@ -34,6 +34,7 @@ import java.io.Serializable;
 
 import net.sf.json.JSONObject;
 
+import org.codehaus.jettison.json.JSONException;
 import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
@@ -153,7 +154,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public CreateComponentBlock getCreateComponent() {
         if (component != null) {
-            return component.getCreateComponentBlock();
+            return component.getCreateComponent();
         }
         else {
             return null;
@@ -190,7 +191,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public DeliveryBlock getDelivery() {
         if (component != null) {
-            return component.getDeliveryBlock();
+            return component.getDelivery();
         }
         else {
             return null;
@@ -356,7 +357,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public CreateProcessBlock getCreateProcess() {
-        return deploy.getCreateProcessBlock();
+        return deploy.getCreateProcess();
     }
 
     public Boolean createProcessChecked() {
@@ -379,7 +380,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public CreateSnapshotBlock getCreateSnapshot() {
-        return deploy.getCreateSnapshotBlock();
+        return deploy.getCreateSnapshot();
     }
 
     public Boolean createSnapshotChecked() {
@@ -399,6 +400,14 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         }
 
         return snapshotName;
+    }
+
+    public Boolean getDeployWithSnapshot() {
+        if (getCreateSnapshot() != null) {
+            return ((getCreateSnapshot()).getDeployWithSnapshot());
+        }
+
+        return false;
     }
 
     public String getDeployVersions() {
@@ -516,7 +525,17 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
         if (deployChecked()) {
             DeployHelper deployHelper = new DeployHelper(udSite.getUri(), udClient, listener, envVars);
-            deployHelper.deployVersion(getDeploy());
+
+            /* Throw AbortException so that Jenkins will mark job as faulty */
+            try {
+                deployHelper.runDeployment(getDeploy());
+            }
+            catch (IOException ex) {
+                throw new AbortException("Deployment has failed due to IOException " + ex.getMessage());
+            }
+            catch (JSONException ex) {
+                throw new AbortException("Deployment has failed due to JSONException " +  ex.getMessage());
+            }
         }
     }
 

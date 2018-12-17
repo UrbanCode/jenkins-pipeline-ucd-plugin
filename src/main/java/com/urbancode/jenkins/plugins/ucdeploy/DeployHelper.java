@@ -108,12 +108,12 @@ public class DeployHelper {
             }
         }
 
-        public CreateProcessBlock getCreateProcessBlock() {
+        public CreateProcessBlock getCreateProcess() {
             return createProcess;
         }
 
         public Boolean createProcessChecked() {
-            if (getCreateProcessBlock() == null) {
+            if (getCreateProcess() == null) {
                 return false;
             }
             else {
@@ -121,12 +121,12 @@ public class DeployHelper {
             }
         }
 
-        public CreateSnapshotBlock getCreateSnapshotBlock() {
+        public CreateSnapshotBlock getCreateSnapshot() {
             return createSnapshot;
         }
 
         public Boolean createSnapshotChecked() {
-            if (getCreateSnapshotBlock() == null) {
+            if (getCreateSnapshot() == null) {
                 return false;
             }
             else {
@@ -173,14 +173,25 @@ public class DeployHelper {
 
     public static class CreateSnapshotBlock {
         private String snapshotName;
+        private Boolean deployWithSnapshot;
 
         @DataBoundConstructor
-        public CreateSnapshotBlock(String snapshotName) {
+        public CreateSnapshotBlock(String snapshotName, Boolean deployWithSnapshot) {
             this.snapshotName = snapshotName;
+            this.deployWithSnapshot = deployWithSnapshot;
         }
 
         public String getSnapshotName() {
             return snapshotName;
+        }
+
+        public Boolean getDeployWithSnapshot() {
+            if (deployWithSnapshot != null) {
+                return deployWithSnapshot;
+            }
+            else {
+                return false;
+            }
         }
     }
 
@@ -188,20 +199,24 @@ public class DeployHelper {
      * Deploys a version in IBM UrbanCode Deploys
      *
      * @param deployBlock The DeployBlock containing the structure of the deployment
-     * @throws AbortException
+     * @throws JSONException
+     * @throws IOException
      */
-    public void deployVersion(DeployBlock deployBlock) throws AbortException {
+    public void runDeployment(DeployBlock deployBlock) throws IOException, JSONException {
         String deployApp = envVars.expand(deployBlock.getDeployApp());
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
+        CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshot();
+        Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
+        Map<String, String> requestProperties = readProperties(deployReqProps);
 
         // create process
         if (deployBlock.createProcessChecked()) {
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
-            processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcessBlock());
+            processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcess());
         }
 
         // required fields
@@ -218,58 +233,63 @@ public class DeployHelper {
             throw new AbortException("Deploy Versions is a required field for deployment.");
         }
 
-        // deploy
+        /* Deploy logic */
         String snapshot = "";
         Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
-        if (deployVersions.toUpperCase().startsWith("SNAPSHOT="))
-        {
-            if (deployVersions.contains("\n")) {
-                throw new AbortException("Only a single SNAPSHOT can be specified");
+        UUID appProcUUID;
+
+        /* Create snapshot preemptively to deploy */
+        if (doCreateSnapshot && createSnapshot.getDeployWithSnapshot()) {
+            snapshot = envVars.expand(createSnapshot.getSnapshotName());
+            doCreateSnapshot = false; // Set to false so reactive snapshot isn't created also
+
+            if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
+                listener.getLogger().println("[Warning] When deploying with a build environment snapshot,"
+                        + " you may not specify additional snapshots in the 'Snapshot/Component Versions' box."
+                        + " This field will be ignored for this deployment.");
             }
-            snapshot = deployVersions.replaceFirst("(?i)SNAPSHOT=", "");
+            else {
+                componentVersions = readComponentVersions(deployVersions);  // Versions to add to new snapshot
+            }
+
+            listener.getLogger().println("Creating environment snapshot '" + snapshot
+                    + "' in UrbanCode Deploy.");
+            appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
+
+            for (Map.Entry<String, List<String>> entry : componentVersions.entrySet()) {
+                String component = entry.getKey();
+
+                /* Add each version for this component to the snapshot */
+                for (String version : entry.getValue()) {
+                    listener.getLogger().println("Adding component version '" + version +
+                            "' of component '" + component + " to snapshot.");
+                    appClient.addVersionToSnapshot(snapshot, deployApp, version, component);
+                }
+            }
+
             listener.getLogger().println("Deploying SNAPSHOT '" + snapshot + "'");
         }
+        /* Deploy with component versions or a pre-existing snapshot */
         else {
-            componentVersions = readComponentVersions(deployVersions);
-            listener.getLogger().println("Deploying component versions '" + componentVersions + "'");
+            if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
+                if (deployVersions.contains("\n")) {
+                    throw new AbortException("Only a single SNAPSHOT can be specified");
+                }
+                snapshot = deployVersions.replaceFirst("(?i)SNAPSHOT=", "");
+                listener.getLogger().println("Deploying SNAPSHOT '" + snapshot + "'");
+            }
+            else {
+                componentVersions = readComponentVersions(deployVersions);
+                listener.getLogger().println("Deploying component versions '" + componentVersions + "'");
+            }
         }
 
-        Map<String, String> requestProperties = readProperties(deployReqProps);
+        appProcUUID = deploy(deployApp, deployProc, deployDesc, deployEnv, snapshot, componentVersions,
+                deployBlock.getDeployOnlyChanged(), requestProperties);
 
         listener.getLogger().println("Starting deployment process '" + deployProc + "' of application '" + deployApp +
                                      "' in environment '" + deployEnv + "'");
-        UUID appProcUUID;
-        try {
-            // Confirm all application request properties are fulfilled (not done by UCD)
-            JSONArray unfilledProps = appClient.checkUnfilledApplicationProcessRequestProperties(deployApp,
-                    deployProc, snapshot, requestProperties);
-            if (unfilledProps.length() > 0) {
-                List<String> props = new ArrayList<String>();
-                for (int i = 0; i < unfilledProps.length(); i++) {
-                    String propName = unfilledProps.getJSONObject(i).getString("name");
-                    props.add(propName);
-                }
-                throw new AbortException("Required UrbanCode Deploy Application Process request properties were not supplied: " + props.toString());
-            }
 
-            // Run the application process
-            appProcUUID = appClient.requestApplicationProcess(deployApp,
-                                                              deployProc,
-                                                              deployDesc,
-                                                              deployEnv,
-                                                              snapshot,
-                                                              deployBlock.getDeployOnlyChanged(),
-                                                              componentVersions,
-                                                              requestProperties);
-
-        }
-        catch (IOException ex) {
-            throw new AbortException("Could not request application process: " + ex.getMessage());
-        }
-        catch (JSONException ex) {
-            throw new AbortException("An error occurred while processing the JSON object for the application process " +
-                                     "request: " + ex.getMessage());
-        }
 
         listener.getLogger().println("Deployment request id is: '" + appProcUUID.toString() + "'");
         listener.getLogger().println("Deployment is running. Waiting for UCD Server feedback.");
@@ -300,25 +320,14 @@ public class DeployHelper {
             }
         }
 
-        // create snapshot of environment
-        if (deployBlock.createSnapshotChecked()) {
-            try {
-                CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshotBlock();
-                String snapshotName = envVars.expand(createSnapshot.getSnapshotName());
+        /* create snapshot of environment reactively, as a result of successful deployment */
+        if (doCreateSnapshot) {
+            String snapshotName = envVars.expand(createSnapshot.getSnapshotName());
 
-                listener.getLogger().println("Creating environment snapshot '" + snapshotName
-                        + "' in UrbanCode Deploy.");
-                appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
-                listener.getLogger().println("Successfully created environment snapshot.");
-            }
-            catch (IOException ex) {
-                throw new AbortException("Failed to create envrionment snapshot: " + ex.getMessage());
-            }
-            catch (JSONException ex) {
-                throw new AbortException("An error occurred while processing the JSON object for the snapshot " +
-                                         "request: " + ex.getMessage());
-            }
-
+            listener.getLogger().println("Creating environment snapshot '" + snapshotName
+                    + "' in UrbanCode Deploy.");
+            appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
+            listener.getLogger().println("Successfully created environment snapshot.");
         }
 
         long duration = (new Date().getTime() - startTime) / 1000;
@@ -326,6 +335,42 @@ public class DeployHelper {
         listener.getLogger().println("Finished the deployment in " + duration + " seconds");
         listener.getLogger().println("The deployment result is " + deploymentResult + ". See the UrbanCode Deploy deployment " +
                                      "logs for details.");
+    }
+
+    private UUID deploy(
+            String application,
+            String appProcess,
+            String description,
+            String environment,
+            String snapshot,
+            Map<String, List<String>> componentVersions,
+            Boolean deployOnlyChanged,
+            Map<String, String> requestProperties)
+    throws IOException, JSONException {
+
+        // Confirm all application request properties are fulfilled (not done by UCD)
+        JSONArray unfilledProps = appClient.checkUnfilledApplicationProcessRequestProperties(application,
+                appProcess, snapshot, requestProperties);
+        if (unfilledProps.length() > 0) {
+            List<String> props = new ArrayList<String>();
+            for (int i = 0; i < unfilledProps.length(); i++) {
+                String propName = unfilledProps.getJSONObject(i).getString("name");
+                props.add(propName);
+            }
+            throw new AbortException("Required UrbanCode Deploy Application Process request properties were "
+                    + "not supplied: " + props.toString());
+        }
+
+        // Run the application process
+        UUID appProcUUID = appClient.requestApplicationProcess(application,
+                                                          appProcess,
+                                                          description,
+                                                          environment,
+                                                          snapshot,
+                                                          deployOnlyChanged,
+                                                          componentVersions,
+                                                          requestProperties);
+        return appProcUUID;
     }
 
     /**

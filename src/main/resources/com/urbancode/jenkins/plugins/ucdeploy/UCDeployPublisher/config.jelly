@@ -142,6 +142,9 @@
                   <f:entry field="snapshotName" title="Environment Snapshot Name" help="${helpURL}/deploy/snapshot/name.html">
                     <f:textbox default="${BUILD_ID}"/>
                   </f:entry>
+                  <f:entry field="deployWithSnapshot" title="Deploy With Snapshot" help="${helpURL}/deploy/snapshot/deploy-snapshot.html">
+                    <f:checkbox/>
+                  </f:entry>
                 </table>
               </f:block>
             </f:optionalBlock>
