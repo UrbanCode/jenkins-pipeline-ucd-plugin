@@ -84,7 +84,7 @@
     </dependency>
 
     <dependency>
-      <ah-project name='uDeployRestClient' workflow='build workflow [PLUGINS-2205]' />
+      <ah-project name='uDeployRestClient' workflow='build workflow [master]' />
       <criteria status='success' />
       <delivery artifact-set='Dist'>
         <directory>lib</directory>
