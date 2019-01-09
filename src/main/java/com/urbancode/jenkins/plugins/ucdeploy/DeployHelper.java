@@ -24,6 +24,7 @@ import java.util.UUID;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper;
@@ -256,13 +257,40 @@ public class DeployHelper {
                     + "' in UrbanCode Deploy.");
             appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
 
+            listener.getLogger().println("Acquiring all versions of the snapshot.");
+            JSONArray snapshotVersions = appClient.getSnapshotVersions(snapshot, deployApp);
+            Map<String, JSONArray> compVersionMap = new HashMap<String, JSONArray>();
+
+            /* Create a map of component name to a list of its versions in the snapshot */
+            for (int i = 0; i < snapshotVersions.length(); i++) {
+                JSONObject snapshotComponent = snapshotVersions.getJSONObject(i);
+                String name = snapshotComponent.getString("name");
+                JSONArray versions = snapshotComponent.getJSONArray("desiredVersions");
+
+                compVersionMap.put(name, versions);
+            }
+
             for (Map.Entry<String, List<String>> entry : componentVersions.entrySet()) {
                 String component = entry.getKey();
+                JSONArray oldVersions = compVersionMap.get(component);
+
+                /* Remove past versions of the deployment component from the snapshot */
+                if (oldVersions != null && oldVersions.length() > 0) {
+                    for (int i = 0 ; i < oldVersions.length(); i++) {
+                        JSONObject oldVersion = oldVersions.getJSONObject(i);
+                        String oldVersionName = oldVersion.getString("name");
+                        String oldVersionId = oldVersion.getString("id");
+
+                        listener.getLogger().println("Removing past version '" + oldVersionName +
+                                "' of component '" + component + "' from snapshot.");
+                        appClient.removeVersionFromSnapshot(snapshot, deployApp, oldVersionId, component);
+                    }
+                }
 
                 /* Add each version for this component to the snapshot */
                 for (String version : entry.getValue()) {
                     listener.getLogger().println("Adding component version '" + version +
-                            "' of component '" + component + " to snapshot.");
+                            "' of component '" + component + "' to snapshot.");
                     appClient.addVersionToSnapshot(snapshot, deployApp, version, component);
                 }
             }
