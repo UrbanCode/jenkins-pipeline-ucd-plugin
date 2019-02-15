@@ -52,6 +52,7 @@ public class DeployHelper {
         private String deployApp;
         private String deployEnv;
         private String deployProc;
+        private Boolean skipWait;
         private CreateProcessBlock createProcess;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
@@ -64,6 +65,7 @@ public class DeployHelper {
             String deployApp,
             String deployEnv,
             String deployProc,
+            Boolean skipWait,
             CreateProcessBlock createProcess,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
@@ -74,6 +76,7 @@ public class DeployHelper {
             this.deployApp = deployApp;
             this.deployEnv = deployEnv;
             this.deployProc = deployProc;
+            this.skipWait = skipWait;
             this.createProcess = createProcess;
             this.createSnapshot = createSnapshot;
             this.deployVersions = deployVersions;
@@ -111,6 +114,15 @@ public class DeployHelper {
 
         public CreateProcessBlock getCreateProcess() {
             return createProcess;
+        }
+
+        public Boolean getSkipWait() {
+            if (skipWait != null) {
+                return skipWait;
+            }
+            else {
+                return false;
+            }
         }
 
         public Boolean createProcessChecked() {
@@ -207,6 +219,7 @@ public class DeployHelper {
         String deployApp = envVars.expand(deployBlock.getDeployApp());
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
+        Boolean skipWait = deployBlock.getSkipWait();
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
@@ -326,26 +339,33 @@ public class DeployHelper {
         boolean processFinished = false;
         String deploymentResult = "";
 
-        while (!processFinished) {
-            deploymentResult = checkDeploymentProcessResult(appProcUUID.toString());
+        /* Wait for process to finish unless skipping the wait */
+        if (!skipWait) {
+            while (!processFinished) {
+                deploymentResult = checkDeploymentProcessResult(appProcUUID.toString());
 
-            if (!deploymentResult.isEmpty()
-                    && !deploymentResult.equalsIgnoreCase("NONE")
-                    && !deploymentResult.equalsIgnoreCase("SCHEDULED FOR FUTURE")) {
-                processFinished = true;
+                if (!deploymentResult.isEmpty()
+                        && !deploymentResult.equalsIgnoreCase("NONE")
+                        && !deploymentResult.equalsIgnoreCase("SCHEDULED FOR FUTURE")) {
+                    processFinished = true;
 
-                if (deploymentResult.equalsIgnoreCase("FAULTED") || deploymentResult.equalsIgnoreCase("FAILED TO START")) {
-                    throw new AbortException("Deployment process failed with result " + deploymentResult);
+                    if (deploymentResult.equalsIgnoreCase("FAULTED") || deploymentResult.equalsIgnoreCase("FAILED TO START")) {
+                        throw new AbortException("Deployment process failed with result " + deploymentResult);
+                    }
+                }
+
+                // give application process more time to complete
+                try {
+                    Thread.sleep(3000);
+                }
+                catch (InterruptedException ex) {
+                    throw new AbortException("Could not wait to check deployment result: " + ex.getMessage());
                 }
             }
-
-            // give application process more time to complete
-            try {
-                Thread.sleep(3000);
-            }
-            catch (InterruptedException ex) {
-                throw new AbortException("Could not wait to check deployment result: " + ex.getMessage());
-            }
+        }
+        else {
+            listener.getLogger().println("'Skip Wait' option selected. Returning immmediately "
+                    + "without waiting for the UCD process to complete.");
         }
 
         /* create snapshot of environment reactively, as a result of successful deployment */

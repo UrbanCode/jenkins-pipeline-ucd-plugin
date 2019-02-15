@@ -121,6 +121,9 @@
             <f:entry field="deployProc" title="Application Process Name" help="${helpURL}/deploy/appproc.html">
               <f:textbox/>
             </f:entry>
+            <f:entry field="skipWait" title="Skip Wait" help="${helpURL}/deploy/skipwait.html">
+              <f:checkbox/>
+            </f:entry>
             <f:optionalBlock name="createProcess"
                              title="Create As New Application Process"
                              help="${helpURL}/deploy/create/help.html"

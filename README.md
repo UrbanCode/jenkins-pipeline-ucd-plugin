@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.11
+Added option to skip waiting for a successful deployment from UCD.
+
 ### Version 2.10
 Added functionality to preemptively create environment snapshot to use during deployment.
 

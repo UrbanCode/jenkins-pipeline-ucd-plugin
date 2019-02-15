@@ -356,6 +356,14 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         return deployProc;
     }
 
+    public Boolean getSkipWait() {
+        if (deploy != null) {
+            return deploy.getSkipWait();
+        }
+
+        return false;
+    }
+
     public CreateProcessBlock getCreateProcess() {
         return deploy.getCreateProcess();
     }
