@@ -159,12 +159,18 @@ public class VersionHelper {
             UUID versionId;
             try {
                 versionId = verClient.createVersion(componentName, version, envVars.expand(pushBlock.getPushDescription()));
-                putEnvVar(componentName + "_VersionId", versionId.toString());
             }
             catch (Exception ex) {
                 throw new AbortException("Failed to create component version: " + ex.getMessage());
             }
             listener.getLogger().println("Successfully created component version with UUID '" + versionId.toString() + "'");
+
+            try {
+                putEnvVar(componentName + "_VersionId", versionId.toString());
+            }
+            catch (Exception ex) {
+                listener.getLogger().println("[Warning] Failed to set version ID as environment variable.");
+            }
 
             // upload files
             listener.getLogger().println("Uploading files to version '" + version + "' on component '" + componentName + "'");

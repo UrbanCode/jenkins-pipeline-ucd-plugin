@@ -10,7 +10,7 @@
   <name>IBM UrbanCode Deploy Pipeline (Build Steps) Plugin</name>
   <groupId>com.urbancode.jenkins.plugins</groupId>
   <artifactId>ibm-ucdeploy-build-steps</artifactId>
-  <version>2.12.${env.buildLife}</version>
+  <version>2.13.${env.buildLife}</version>
   <packaging>hpi</packaging>
   <url>https://developer.ibm.com/urbancode/plugin/jenkins/</url>
 

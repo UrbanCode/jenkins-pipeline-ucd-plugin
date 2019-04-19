@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.13
+Modified process to continue if user is unable to set environment variable.
+
 ### Version 2.12
 Set component version as environment variable when pushing a new version.
 
