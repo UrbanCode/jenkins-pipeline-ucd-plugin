@@ -25,6 +25,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.HttpResponse;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 /**
  * This class is used to configure individual sites which are
@@ -138,6 +139,7 @@ public class UCDeploySite implements Serializable {
      * @param profileName
      *          the new profile name
      */
+    @DataBoundSetter
     public void setProfileName(String profileName) {
         this.profileName = profileName;
     }
@@ -157,6 +159,7 @@ public class UCDeploySite implements Serializable {
      * @param url
      *          the new url
      */
+    @DataBoundSetter
     public void setUrl(String url) {
         this.url = url;
         if (this.url != null) {
@@ -195,6 +198,7 @@ public class UCDeploySite implements Serializable {
      * @param username
      *          the new username
      */
+    @DataBoundSetter
     public void setUser(String user) {
         this.user = user;
     }
@@ -214,6 +218,7 @@ public class UCDeploySite implements Serializable {
      * @param password
      *          the new password
      */
+    @DataBoundSetter
     public void setPassword(Secret password) {
         this.password = password;
     }
@@ -232,6 +237,7 @@ public class UCDeploySite implements Serializable {
      *
      * @param trustAllCerts
      */
+    @DataBoundSetter
     public void setTrustAllCerts(boolean trustAllCerts) {
         this.trustAllCerts = trustAllCerts;
     }

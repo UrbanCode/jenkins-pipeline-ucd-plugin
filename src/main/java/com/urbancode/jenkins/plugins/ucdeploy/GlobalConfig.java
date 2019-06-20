@@ -16,6 +16,7 @@ import hudson.util.CopyOnWriteList;
 import hudson.util.FormFieldValidator;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import javax.servlet.ServletException;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -34,6 +36,8 @@ import org.kohsuke.stapler.StaplerResponse;
  *
  */
 public class GlobalConfig extends JobProperty<Job<?, ?>> {
+
+
     /**
      * {@inheritDoc}
      *
@@ -73,6 +77,11 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
             return sites.toArray(new UCDeploySite[size]);
         }
 
+        @DataBoundSetter
+        public void setSites(UCDeploySite[] sitesArray){
+            sites.replaceBy(Arrays.asList(sitesArray));
+        }
+
         /**
          * Replace sites with user defined sites
          *
@@ -87,6 +96,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
             save();
             return super.configure(req, formData);
         }
+
 
         /**
          * {@inheritDoc}

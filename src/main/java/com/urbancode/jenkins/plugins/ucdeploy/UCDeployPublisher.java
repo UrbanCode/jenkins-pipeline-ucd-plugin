@@ -37,6 +37,7 @@ import net.sf.json.JSONObject;
 import org.codehaus.jettison.json.JSONException;
 import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.StaplerRequest;
 
 import com.urbancode.jenkins.plugins.ucdeploy.ComponentHelper.CreateComponentBlock;
@@ -664,6 +665,11 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
          */
         public UCDeploySite[] getSites() {
             return GLOBALDESCRIPTOR.getSites();
+        }
+
+        @DataBoundSetter
+        public void setSites(UCDeploySite[] sitesArray) {
+            GLOBALDESCRIPTOR.setSites(sitesArray);
         }
 
         /**
