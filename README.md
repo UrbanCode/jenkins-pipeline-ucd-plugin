@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.14
+Fixing CVE:CVE-2019-4233
+
 ### Version 2.13
 Modified process to continue if user is unable to set environment variable.
 
