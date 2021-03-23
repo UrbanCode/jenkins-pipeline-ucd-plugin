@@ -10,17 +10,27 @@ package com.urbancode.jenkins.plugins.ucdeploy;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.model.TaskListener;
+import hudson.model.AbstractModelObject;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.Build;
+import hudson.model.Hudson;
+import hudson.model.Job;
+import hudson.model.ParameterValue;
+import hudson.model.ParametersAction;
+import hudson.model.Run;
+import hudson.model.StringParameterValue;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
 import jenkins.model.Jenkins;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +40,6 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
-
 import com.urbancode.jenkins.plugins.ucdeploy.ComponentHelper.CreateComponentBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.DeliveryBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Pull;
@@ -54,6 +63,8 @@ public class VersionHelper {
     private VersionClient verClient;
     private TaskListener listener;
     private EnvVars envVars;
+    private String jobName;
+    private String buildNumber;
 
     public VersionHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
         appClient = new ApplicationClient(ucdUrl, httpClient);
@@ -124,6 +135,12 @@ public class VersionHelper {
      *
      */
     public void createVersion(VersionBlock versionBlock, String linkName, String linkUrl) throws AbortException {
+    	
+    	String[] linkUrlParts = linkUrl.split("/");
+
+    	jobName = linkUrlParts[4];
+    	buildNumber = linkUrlParts[5];
+    	 
         ComponentHelper componentHelper = new ComponentHelper(appClient, compClient, listener, envVars);
         String componentName = envVars.expand(versionBlock.getComponentName());
         String componentTag = envVars.expand(versionBlock.getComponentTag());
@@ -186,6 +203,50 @@ public class VersionHelper {
             setComponentVersionProperties(componentName,
                                           version,
                                           DeliveryBlock.mapProperties(envVars.expand(pushBlock.getPushProperties())));
+            
+            //start : push version properties to build parameters
+            
+            Map<String, String> versionProperties = DeliveryBlock.mapProperties(pushBlock.getPushProperties());
+            
+            try {
+            
+            for (Map.Entry<String,String> entry : versionProperties.entrySet()) {
+            	listener.getLogger().println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            	listener.getLogger().println("Add key : " + entry.getKey());
+            	putEnvVar(jobName + "_" + buildNumber + "_" + entry.getKey() , entry.getValue().toString());
+            }
+            
+            }catch(Exception ex) {
+            	listener.getLogger().println("[Warning] Failed to set versionProperties as environment variables.");
+            }
+            
+            /*
+            Job<?,?> job = (Job<?,?>) Jenkins.getInstance().getItemByFullName(jobName);
+            Run runningBuild = job.getBuildByNumber(Integer.parseInt(buildNumber));
+            
+            Action action = runningBuild.getAction(0);
+            
+            
+            ParametersAction paramAction = (ParametersAction) action;
+            
+            List<ParameterValue> parameters = paramAction.getParameters();
+            StringParameterValue pv = new StringParameterValue("jack", "hammer");
+            listener.getLogger().println("add jack");
+            //parameters.add((ParameterValue)pv);
+            List<ParameterValue> buildParams = new ArrayList<>();
+            buildParams.add(pv);
+            parameters.addAll(buildParams);
+            
+            listener.getLogger().println("added jack");
+            
+            
+            //List<ParameterValue> parameters = paramAction.;
+            //StringParameterValue paramv = (StringParameterValue) parameters.get(0);
+            //parameters.add(paramv);
+            //Jenkins.getInstance().save();
+			*/
+            
+            //end : push version properties to build parameters
 
             // add link
             listener.getLogger().println("Creating component version link '" + linkName + "' to URL '" + linkUrl + "'");
@@ -274,7 +335,7 @@ public class VersionHelper {
      * @throws IOException
      */
     private void putEnvVar(String key, String value) throws IOException {
-        key = key.replaceAll(" ", "_");
+        key = key.replaceAll(" ", "_");     
         listener.getLogger().println("Setting environment variable " + key + ".");
         Jenkins jenkins = Jenkins.getInstance();
         DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties =
@@ -292,8 +353,10 @@ public class VersionHelper {
         } else {
            envVars = envVarsNodePropertyList.get(0).getEnvVars();
         }
+
         envVars.put(key, value);
         jenkins.save();
+        
      }
 
     /**
