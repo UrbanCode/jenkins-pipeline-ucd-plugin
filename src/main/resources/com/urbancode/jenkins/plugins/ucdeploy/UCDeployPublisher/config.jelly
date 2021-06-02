@@ -3,7 +3,7 @@
   <j:set var="helpURL" value="/plugin/ibm-ucdeploy-build-steps"/>
 
   <f:entry>
-    <table width="100%">
+    <div>
       <f:entry title="IBM UrbanCode Deploy Server" help="${helpURL}/site.html">
         <select class="setting-input" name="siteName">
           <j:forEach var="s" items="${descriptor.getSites()}">
@@ -16,14 +16,14 @@
                        help="${helpURL}/alt-user.html"
                        checked="${instance.altUserChecked()}">
         <f:block>
-          <table style="width:100%">
+          <div>
             <f:entry title="Alternative Username" field="altUsername" help="${helpURL}/altUser/alt-username.html">
               <f:textbox/>
             </f:entry>
             <f:entry title="Alternative Password" field="altPassword" help="${helpURL}/altUser/alt-password.html">
               <f:password/>
             </f:entry>
-          </table>
+          </div>
         </f:block>
       </f:optionalBlock>
       <f:optionalBlock name="component"
@@ -31,7 +31,7 @@
                        help="${helpURL}/create/help.html"
                        checked="${instance.componentChecked()}">
         <f:block>
-          <table style="width:100%">
+          <div>
             <f:entry field="componentName" title="Component Name" help="${helpURL}/create/component-name.html">
               <f:textbox/>
             </f:entry>
@@ -43,7 +43,7 @@
                              help="${helpURL}/create/new/help.html"
                              checked="${instance.createComponentChecked()}">
               <f:block>
-                <table style="width:100%">
+                <div>
                   <f:entry field="componentTemplate"
                            title="Component Template"
                            help="${helpURL}/create/new/template.html">
@@ -54,10 +54,10 @@
                            help="${helpURL}/create/new/app-name.html">
                     <f:textbox/>
                   </f:entry>
-                </table>
+                </div>
               </f:block>
             </f:optionalBlock>
-          </table>
+          </div>
         </f:block>
         <j:set var="currentDelivery" value="${instance.deliveryType}"/>
         <f:dropdownList name="delivery" title="Delivery Mechanism" help="${helpURL}/create/delivery/help.html">
@@ -111,7 +111,7 @@
                        help="${helpURL}/deploy/help.html"
                        checked="${instance.deployChecked()}">
         <f:block>
-          <table style="width:100%">
+          <div>
             <f:entry field="deployApp" title="Application Name" help="${helpURL}/deploy/app.html">
               <f:textbox/>
             </f:entry>
@@ -129,11 +129,11 @@
                              help="${helpURL}/deploy/create/help.html"
                              checked="${instance.createProcessChecked()}">
               <f:block>
-                <table style="width:100%">
+                <div>
                   <f:entry field="processComponent" title="Component Process Name" help="${helpURL}/deploy/create/comp.html">
                     <f:textbox/>
                   </f:entry>
-                </table>
+                </div>
               </f:block>
             </f:optionalBlock>
             <f:optionalBlock name="createSnapshot"
@@ -141,7 +141,7 @@
                              help="${helpURL}/deploy/snapshot/help.html"
                              checked="${instance.createSnapshotChecked()}">
               <f:block>
-                <table style="width:100%">
+                <div>
                   <f:entry field="snapshotName" title="Environment Snapshot Name" help="${helpURL}/deploy/snapshot/name.html">
                     <f:textbox default="${BUILD_ID}"/>
                   </f:entry>
@@ -151,7 +151,7 @@
                   <f:entry field="includeOnlyDeployVersions" title="Include Only Deploy Versions" help="${helpURL}/deploy/deploy-snapshot-for-deploy-versions-only.html">
                     <f:checkbox default="false"/>
                   </f:entry>                  
-                </table>
+                </div>
               </f:block>
             </f:optionalBlock>
             <f:entry field="deployVersions" title="Snapshot/Component Versions" help="${helpURL}/deploy/versions.html">
@@ -166,9 +166,9 @@
             <f:entry field="deployOnlyChanged" title="Only Changed Versions" help="${helpURL}/deploy/onlychanged.html">
               <f:checkbox default="true"/>
             </f:entry>
-          </table>
+          </div>
         </f:block>
       </f:optionalBlock>
-    </table>
+    </div>
   </f:entry>
 </j:jelly>

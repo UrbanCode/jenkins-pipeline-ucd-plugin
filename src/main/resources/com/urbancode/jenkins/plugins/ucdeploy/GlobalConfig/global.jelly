@@ -5,7 +5,7 @@
   <f:section title="IBM UrbanCode Deploy Pipeline Plugin Configuration">
     <f:entry title="UCD Servers">
       <f:repeatable name="sites" var="site" items="${descriptor.sites}">
-        <table width="100%">
+        <div>
           <f:entry title="Profile Name" help="${helpURL}/global/profile.html">
             <f:textbox name="profileName" value="${site.profileName}"/>
           </f:entry>
@@ -29,7 +29,7 @@
                   method="testConnection" with="url,user,password,trustAllCerts"/>
             </div>
           </f:entry>
-        </table>
+        </div>
       </f:repeatable>
     </f:entry>
   </f:section>
