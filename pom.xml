@@ -12,7 +12,7 @@
   <artifactId>ibm-ucdeploy-build-steps</artifactId>
   <version>2.3.${env.buildLife}</version>
   <packaging>hpi</packaging>
-  <url>https://developer.ibm.com/urbancode/plugin/jenkins/</url>
+  <url>https://www.urbancode.com/plugin/jenkins-pipeline/</url>
 
   <licenses>
     <license>
