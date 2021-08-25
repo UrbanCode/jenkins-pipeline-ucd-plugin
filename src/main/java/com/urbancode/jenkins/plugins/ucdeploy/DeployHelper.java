@@ -310,6 +310,20 @@ public class DeployHelper {
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
+        listener.getLogger().println("[START - CHECKING CORRECT PARAMETERS]");
+        listener.getLogger().println("[deployApp]" + deployApp);
+        listener.getLogger().println("[deployEnv]" + deployEnv);
+        listener.getLogger().println("[deployProc]" + deployProc);
+        listener.getLogger().println("[skipWait]" + skipWait);
+        listener.getLogger().println("[deployVersions]" + deployVersions);
+        listener.getLogger().println("[deployReqProps]" + deployReqProps);
+        listener.getLogger().println("[deployDesc]" + deployDesc);
+        listener.getLogger().println("[createSnapshot]" + createSnapshot);
+        listener.getLogger().println("[doCreateSnapshot]" + doCreateSnapshot);
+        listener.getLogger().println("[requestProperties]" + requestProperties);
+        listener.getLogger().println("[END - CHECKING CORRECT PARAMETERS]");
+
+
         // create process
         if (deployBlock.createProcessChecked()) {
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);

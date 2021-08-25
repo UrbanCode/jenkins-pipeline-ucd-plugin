@@ -506,6 +506,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             throws AbortException, InterruptedException, IOException {
         boolean pushFailedBuild = false;
         pushFailedBuild = ((Push)getDelivery()).getPushFailedBuild();
+        listener.getLogger().println("INVOKE - CALLED");
         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
             if(pushFailedBuild != true || build.getResult() == Result.ABORTED){
                 throw new AbortException("Skip artifacts upload to IBM UrbanCode Deploy - build failed or aborted.");
@@ -543,7 +544,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
                     getComponent(),
                     envVars,
                     listener);
-
             workspace.act(task);
         }
 
@@ -552,6 +552,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
             /* Throw AbortException so that Jenkins will mark job as faulty */
             try {
+                listener.getLogger().println("INVOKE - DEPLOYMENT CALLED");
                 deployHelper.runDeployment(getDeploy());
             }
             catch (IOException ex) {
