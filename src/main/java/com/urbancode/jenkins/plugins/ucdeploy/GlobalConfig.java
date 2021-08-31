@@ -37,7 +37,6 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 public class GlobalConfig extends JobProperty<Job<?, ?>> {
 
-
     /**
      * {@inheritDoc}
      *
@@ -68,13 +67,14 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
         }
 
         public UCDeploySite[] getSites() {
-            Iterator<UCDeploySite> it = sites.iterator();
-            int size = 0;
-            while (it.hasNext()) {
-                it.next();
-                size++;
-            }
-            return sites.toArray(new UCDeploySite[size]);
+               Iterator<UCDeploySite> it = sites.iterator();
+                int size = 0;
+                while (it.hasNext()) {
+                    // listener.getLogger().println(it);
+                    it.next();
+                    size++;
+                }
+                return sites.toArray(new UCDeploySite[size]);           
         }
 
         @DataBoundSetter

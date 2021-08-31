@@ -27,7 +27,8 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.util.Secret;
 
 import jenkins.tasks.SimpleBuildStep;
-
+import java.io.*;
+import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -474,15 +475,25 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
      *
      * @return the matching UCDeploySite or null
      */
-    public UCDeploySite getSite() {
+    public UCDeploySite getSite(final TaskListener listener) {
         UCDeploySite[] sites = GLOBALDESCRIPTOR.getSites();
+        listener.getLogger().println("[PERFORM - stART]");
+        listener.getLogger().println("[COMING FROM GET SITE- CHECKING SITE VALUE]");
+        listener.getLogger().println(sites);
+        listener.getLogger().println(Arrays.toString(sites));
         if (siteName == null && sites.length > 0) {
+           listener.getLogger().println("[COMING FROM IF CONDITION]");
             // default
             return sites[0];
         }
         for (UCDeploySite site : sites) {
+            listener.getLogger().println("[i AM IN FOR LOOP]");
+            listener.getLogger().println(site.getDisplayName());
+            listener.getLogger().println(siteName);
             if (site.getDisplayName().equals(siteName)) {
-                return site;
+                 listener.getLogger().println("PASSED ALL IF CONDITION");
+                 listener.getLogger().println(site);
+                return site;    
             }
         }
         return null;
@@ -504,8 +515,17 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     @Override
     public void perform(final Run<?, ?> build, FilePath workspace, Launcher launcher, final TaskListener listener)
             throws AbortException, InterruptedException, IOException {
+        
+        listener.getLogger().println("[PERFORM - stART]");
+        listener.getLogger().println(build);
+        listener.getLogger().println(workspace);
+        listener.getLogger().println(launcher);
+        listener.getLogger().println(listener);
+        listener.getLogger().println("[PERFORM - END]");
         boolean pushFailedBuild = false;
         pushFailedBuild = ((Push)getDelivery()).getPushFailedBuild();
+        listener.getLogger().println("INVOKE - CALLED");
+        listener.getLogger().println(pushFailedBuild);
         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
             if(pushFailedBuild != true || build.getResult() == Result.ABORTED){
                 throw new AbortException("Skip artifacts upload to IBM UrbanCode Deploy - build failed or aborted.");
@@ -514,8 +534,11 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             }
         }
 
-        UCDeploySite udSite = getSite();
+        UCDeploySite udSite = getSite(listener);
         DefaultHttpClient udClient;  // not serializable
+        listener.getLogger().println("[cHECKING UDSITE]");
+        listener.getLogger().println(udSite);
+        listener.getLogger().println("[cHECKING UDCLIENT]");
 
         if (altUserChecked()) {
             if (getAltUsername().equals("")) {
@@ -529,6 +552,17 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         }
         else {
             udClient = udSite.getClient();
+            listener.getLogger().println("[cHECKING UDCLIENT is coming or not]");
+            listener.getLogger().println(udClient);
+//             try {
+//             }
+//             catch (IOException ex) {
+//                 throw new AbortException("Deployment has failed due to IOException " + ex.getMessage());
+//             }
+//             catch (JSONException ex) {
+//                 throw new AbortException("Deployment has failed due to JSONException " +  ex.getMessage());
+//             }
+          
         }
 
         EnvVars envVars = build.getEnvironment(listener);
@@ -543,7 +577,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
                     getComponent(),
                     envVars,
                     listener);
-
             workspace.act(task);
         }
 
@@ -552,6 +585,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
             /* Throw AbortException so that Jenkins will mark job as faulty */
             try {
+                listener.getLogger().println("INVOKE - DEPLOYMENT CALLED");
                 deployHelper.runDeployment(getDeploy());
             }
             catch (IOException ex) {

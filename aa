@@ -1,0 +1,36 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout
+      - run:
+          name: Download Node
+          command: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
+
+      - run:
+          name: Install Node
+          command: sudo apt-get install -y nodejs    
+
+      - run:
+          name: Install -g gulp
+          command: sudo npm install -g gulp
+
+      - run:
+          name: Install -g bower
+          command: sudo npm install -g bower  
+
+      - run:
+          name: npm Install
+          command: sudo npm install
+          working_directory: src/project 
+
+      - run:
+          name: bower Install
+          command: bower install
+          working_directory: src/project
+      
+      - run: 
+          name: ant -lib lib/ -buildfile build/build.xml
+          command: ant -lib lib/ -buildfile build/build.xml
