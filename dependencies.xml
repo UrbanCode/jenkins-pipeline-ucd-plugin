@@ -29,7 +29,7 @@
 
     <dependency>
       <cs-project name='Apache HttpComponents' />
-      <criteria stamp='4.3.4' status='success' />
+      <criteria stamp='4.5.13' status='success' />
       <delivery artifact-set='lib'>
         <directory>lib</directory>
       </delivery>
