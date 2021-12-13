@@ -27,7 +27,6 @@ import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Pull;
 import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Push;
 import com.urbancode.ud.client.ApplicationClient;
 import com.urbancode.ud.client.ComponentClient;
-import org.apache.http.entity.ContentType;
 
 /**
  * This class provides the structure and function around component control in
@@ -103,15 +102,6 @@ public class ComponentHelper {
         // shared properties
         componentName = envVars.expand(name);
         templateName = envVars.expand(componentBlock.getComponentTemplate());
-        
-        // Get path of the JAR file
-        String jarPath = ContentType.class
-            .getProtectionDomain()
-            .getCodeSource()
-            .getLocation()
-            .toURI()
-            .getPath();
-        listener.getLogger().println("[JAR Path : ]" + jarPath);
 
         // properties based on delivery type
         if (deliveryBlock == null) {
