@@ -51,6 +51,8 @@ import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.CreateSnapshotBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper.VersionBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.UCDeployPublisher.UserBlock;
+import org.apache.http.entity.ContentType;
+import java.net.URISyntaxException;
 
 public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
@@ -504,6 +506,24 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     @Override
     public void perform(final Run<?, ?> build, FilePath workspace, Launcher launcher, final TaskListener listener)
             throws AbortException, InterruptedException, IOException {
+        try {
+            // Get path of the JAR file
+            String jarPath = ContentType.class
+                .getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toURI()
+                .getPath();
+            
+            listener.getLogger().println("[UCDDeployPublisher - JAR Path : ]" + jarPath);
+
+            // Get name of the JAR file
+            String jarName = jarPath.substring(jarPath.lastIndexOf("/") + 1);
+            listener.getLogger().println("JAR Name: " + jarName);
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         boolean pushFailedBuild = false;
         pushFailedBuild = ((Push)getDelivery()).getPushFailedBuild();
         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
