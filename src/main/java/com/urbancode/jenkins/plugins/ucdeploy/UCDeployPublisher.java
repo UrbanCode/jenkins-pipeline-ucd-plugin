@@ -506,15 +506,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             throws AbortException, InterruptedException, IOException {
         boolean pushFailedBuild = false;
         listener.getLogger().println("Pushing Failed Build");
-//         pushFailedBuild = ((Push)getDelivery()).getPushFailedBuild();
-//         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
-//             if(pushFailedBuild != true || build.getResult() == Result.ABORTED){
-//                 throw new AbortException("Skip artifacts upload to IBM UrbanCode Deploy - build failed or aborted.");
-//             } else {
-//                 listener.getLogger().println("Pushing Failed Build");   
-//             }
-//         }
-
         UCDeploySite udSite = getSite();
         DefaultHttpClient udClient;  // not serializable
 
