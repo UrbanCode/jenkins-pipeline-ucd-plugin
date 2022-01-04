@@ -112,6 +112,7 @@ public class VersionHelper {
         }
 
         public DeliveryBlock getDelivery() {
+            UCDeployPublisher.ts.getLogger().println("[getDelivery]" + delivery);
             return delivery;
         }
     }

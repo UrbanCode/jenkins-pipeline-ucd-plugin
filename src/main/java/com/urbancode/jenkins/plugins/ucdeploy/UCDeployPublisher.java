@@ -157,10 +157,13 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public CreateComponentBlock getCreateComponent() {
+        UCDeployPublisher.ts.getLogger().println("[getCreateComponent]");
         if (component != null) {
+            UCDeployPublisher.ts.getLogger().println("[IF]");
             return component.getCreateComponent();
         }
         else {
+            UCDeployPublisher.ts.getLogger().println("[ELSE]");
             return null;
         }
     }
@@ -194,10 +197,14 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public DeliveryBlock getDelivery() {
+        UCDeployPublisher.ts.getLogger().println("[getDelivery()]");
+        UCDeployPublisher.ts.getLogger().println("[component]" + component);
         if (component != null) {
+            UCDeployPublisher.ts.getLogger().println("[IF]");
             return component.getDelivery();
         }
         else {
+            UCDeployPublisher.ts.getLogger().println("[ELSE]");
             return null;
         }
     }
