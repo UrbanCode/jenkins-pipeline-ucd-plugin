@@ -53,6 +53,8 @@ import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper.VersionBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.UCDeployPublisher.UserBlock;
 import org.apache.http.entity.ContentType;
 import java.net.URISyntaxException;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
@@ -559,7 +561,19 @@ ts = listener;
             udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
         }
         else {
-            udClient = udSite.getClient();
+            udClient = null;
+            try {
+                if (udSite == null){
+                    listener.getLogger().println("[***********UDSITE is NULL]");    
+                }
+                udClient = udSite.getClient();
+            } catch(Exception e) {
+                listener.getLogger().println("[Error starts here...]");
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw)); 
+                String exceptionAsString = sw.toString();
+                listener.getLogger().println("[Error with getClient]"+ exceptionAsString);
+            }
         }
 
         EnvVars envVars = build.getEnvironment(listener);
@@ -669,7 +683,12 @@ ts = listener;
                 udClient = udSite.getTempClient(altUser.getAltUsername(), altUser.getAltPassword());
             }
             else {
-                udClient = udSite.getClient();
+                udClient = null;
+                try {
+                    udClient = udSite.getClient();    
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
             }
 
             VersionHelper versionHelper = new VersionHelper(udSite.getUri(), udClient, listener, envVars);
