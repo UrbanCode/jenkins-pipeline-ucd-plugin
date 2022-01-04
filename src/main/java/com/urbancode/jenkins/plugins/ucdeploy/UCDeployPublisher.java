@@ -687,7 +687,10 @@ ts = listener;
                 try {
                     udClient = udSite.getClient();    
                 } catch (Exception e) {
-                    //TODO: handle exception
+                    StringWriter sw = new StringWriter();
+                    e.printStackTrace(new PrintWriter(sw)); 
+                    String exceptionAsString = sw.toString();
+                    listener.getLogger().println("[Error with getClient]"+ exceptionAsString);
                 }
             }
 
