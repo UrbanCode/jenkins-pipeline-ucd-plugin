@@ -167,24 +167,6 @@ public class VersionHelper {
         }
         // create version
         if (versionBlock.getDelivery().getDeliveryType() == DeliveryBlock.DeliveryType.Push) {
-            try {
-                // Get path of the JAR file
-                String jarPath = ContentType.class
-                    .getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .toURI()
-                    .getPath();
-                
-                listener.getLogger().println("[Version - JAR Path : ]" + jarPath);
-    
-                // Get name of the JAR file
-                String jarName = jarPath.substring(jarPath.lastIndexOf("/") + 1);
-                listener.getLogger().println("JAR Name: " + jarName);
-    
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
             Push pushBlock = (Push)versionBlock.getDelivery();
             String version = envVars.expand(pushBlock.getPushVersion());
             listener.getLogger().println("Creating new component version '" + version + "' on component '" + componentName +
@@ -212,25 +194,6 @@ public class VersionHelper {
             }
 
             // upload files
-            try {
-                // Get path of the JAR file
-                String jarPath = ContentType.class
-                    .getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .toURI()
-                    .getPath();
-                
-                listener.getLogger().println("[Version - Till upload it worked fine : ]" + jarPath);
-    
-                // Get name of the JAR file
-                String jarName = jarPath.substring(jarPath.lastIndexOf("/") + 1);
-                listener.getLogger().println("JAR Name: " + jarName);
-    
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
             listener.getLogger().println("Uploading files to version '" + version + "' on component '" + componentName + "'");
             uploadVersionFiles(envVars.expand(pushBlock.getBaseDir()),
                                componentName,
@@ -311,7 +274,6 @@ public class VersionHelper {
         }
 
         try {
-            listener.getLogger().println("[Making sure call happened till here]" );
             verClient.addVersionFiles(component,
                                       version,
                                       base,

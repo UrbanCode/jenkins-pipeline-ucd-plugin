@@ -159,15 +159,12 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public CreateComponentBlock getCreateComponent() {
-        UCDeployPublisher.ts.getLogger().println("[getCreateComponent]");
         if (component != null) {
-            UCDeployPublisher.ts.getLogger().println("[IF]");
+            UCDeployPublisher.ts.getLogger().println("[In getCreateComponent, component NOT NULL ]");
             return component.getCreateComponent();
         }
-        else {
-            UCDeployPublisher.ts.getLogger().println("[ELSE]");
-            return null;
-        }
+        UCDeployPublisher.ts.getLogger().println("[In getCreateComponent, component IS NULL]");
+        return null;
     }
 
     public Boolean createComponentChecked() {
@@ -199,16 +196,12 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public DeliveryBlock getDelivery() {
-        UCDeployPublisher.ts.getLogger().println("[getDelivery()]");
-        UCDeployPublisher.ts.getLogger().println("[component]" + component);
         if (component != null) {
-            UCDeployPublisher.ts.getLogger().println("[IF]");
+            UCDeployPublisher.ts.getLogger().println("[In getDelivery - component]" + component);
             return component.getDelivery();
         }
-        else {
-            UCDeployPublisher.ts.getLogger().println("[ELSE]");
-            return null;
-        }
+        UCDeployPublisher.ts.getLogger().println("[In getDelivery - component is NULL]");
+        return null;
     }
 
     public String getDeliveryType() {
@@ -547,7 +540,7 @@ ts = listener;
 
         UCDeploySite udSite = getSite();
         if (null == udSite) {
-            throw new AbortException("Profile name and display name is NOT same");
+            throw new AbortException("Profile name and display name is NOT same, we cannot proceed unless these values are same.");
         }
     DefaultHttpClient udClient;  // not serializable
 
@@ -668,19 +661,15 @@ ts = listener;
         public Boolean invoke(File workspace, VirtualChannel node) throws IOException, InterruptedException {
             DefaultHttpClient udClient;
 
+            if (null == udSite) {
+                throw new AbortException("Profile name and display name is NOT same, we cannot proceed unless these values are same.");
+            }
+
             if (altUser != null) {
                 udClient = udSite.getTempClient(altUser.getAltUsername(), altUser.getAltPassword());
             }
             else {
-                udClient = null;
-                try {
-                    udClient = udSite.getClient();    
-                } catch (Exception e) {
-                    StringWriter sw = new StringWriter();
-                    e.printStackTrace(new PrintWriter(sw)); 
-                    String exceptionAsString = sw.toString();
-                    listener.getLogger().println("[Error with getClient]"+ exceptionAsString);
-                }
+                udClient = udSite.getClient();
             }
 
             VersionHelper versionHelper = new VersionHelper(udSite.getUri(), udClient, listener, envVars);

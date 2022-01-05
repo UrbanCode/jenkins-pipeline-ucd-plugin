@@ -105,25 +105,6 @@ public class ComponentHelper {
         componentName = envVars.expand(name);
         templateName = envVars.expand(componentBlock.getComponentTemplate());
         
-        try {
-            // Get path of the JAR file
-            String jarPath = ContentType.class
-                .getProtectionDomain()
-                .getCodeSource()
-                .getLocation()
-                .toURI()
-                .getPath();
-            
-            listener.getLogger().println("[Component - JAR Path : ]" + jarPath);
-
-            // Get name of the JAR file
-            String jarName = jarPath.substring(jarPath.lastIndexOf("/") + 1);
-            listener.getLogger().println("JAR Name: " + jarName);
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
         // properties based on delivery type
         if (deliveryBlock == null) {
             throw new AbortException("You must specify a Delivery Type.");
@@ -165,25 +146,6 @@ public class ComponentHelper {
 
         // create new component
         if (componentUUID == null) {
-            try {
-                // Get path of the JAR file
-                String jarPath = ContentType.class
-                    .getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .toURI()
-                    .getPath();
-                
-                listener.getLogger().println("[Component - JAR Path : ]" + jarPath);
-    
-                // Get name of the JAR file
-                String jarName = jarPath.substring(jarPath.lastIndexOf("/") + 1);
-                listener.getLogger().println("JAR Name: " + jarName);
-    
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            
             try {
                 listener.getLogger().println("Creating new component '" + componentName + "'");
                 componentUUID = compClient.createComponent(componentName, description, sourceConfigPlugin,
