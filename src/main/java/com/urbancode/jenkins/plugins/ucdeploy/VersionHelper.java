@@ -39,8 +39,6 @@ import com.urbancode.ud.client.ApplicationClient;
 import com.urbancode.ud.client.ComponentClient;
 import com.urbancode.ud.client.PropertyClient;
 import com.urbancode.ud.client.VersionClient;
-import org.apache.http.entity.ContentType;
-import java.net.URISyntaxException;
 
 /**
  * This class provides the structure and function around version control in IBM
@@ -147,24 +145,6 @@ public class VersionHelper {
             componentHelper.addTag(componentName, componentTag);
         }
 
-        try {
-            // Get path of the JAR file
-            String jarPath = ContentType.class
-                .getProtectionDomain()
-                .getCodeSource()
-                .getLocation()
-                .toURI()
-                .getPath();
-            
-            listener.getLogger().println("[Version - JAR Path : ]" + jarPath);
-
-            // Get name of the JAR file
-            String jarName = jarPath.substring(jarPath.lastIndexOf("/") + 1);
-            listener.getLogger().println("JAR Name: " + jarName);
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
         // create version
         if (versionBlock.getDelivery().getDeliveryType() == DeliveryBlock.DeliveryType.Push) {
             Push pushBlock = (Push)versionBlock.getDelivery();

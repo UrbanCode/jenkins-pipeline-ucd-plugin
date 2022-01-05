@@ -68,15 +68,8 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
         }
 
         public UCDeploySite[] getSites() {
-            Iterator<UCDeploySite> it = sites.iterator();
             UCDeployPublisher.ts.getLogger().println("sites" + sites);
-            int size = 0;
-            while (it.hasNext()) {
-                it.next();
-                size++;
-            }
-            UCDeployPublisher.ts.getLogger().println("sites.toArray(new UCDeploySite[size])" + sites.toArray(new UCDeploySite[size]));
-            return sites.toArray(new UCDeploySite[size]);
+            return sites.toArray(new UCDeploySite[sites.size()]);
         }
 
         @DataBoundSetter

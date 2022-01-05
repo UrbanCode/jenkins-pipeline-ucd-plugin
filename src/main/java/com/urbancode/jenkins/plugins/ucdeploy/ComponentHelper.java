@@ -7,28 +7,24 @@
 
 package com.urbancode.jenkins.plugins.ucdeploy;
 
+import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.DeliveryBlock;
+import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Pull;
+import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Push;
+import com.urbancode.ud.client.ApplicationClient;
+import com.urbancode.ud.client.ComponentClient;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.model.TaskListener;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.DeliveryBlock;
-import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Pull;
-import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Push;
-import com.urbancode.ud.client.ApplicationClient;
-import com.urbancode.ud.client.ComponentClient;
-import org.apache.http.entity.ContentType;
-import java.net.URISyntaxException;
 
 /**
  * This class provides the structure and function around component control in
