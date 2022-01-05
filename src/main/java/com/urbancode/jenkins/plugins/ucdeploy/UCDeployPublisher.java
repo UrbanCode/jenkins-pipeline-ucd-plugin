@@ -1,3 +1,10 @@
+/**
+ * (c) Copyright IBM Corporation 2017.
+ * This is licensed under the following license.
+ * The Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+ * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+
 package com.urbancode.jenkins.plugins.ucdeploy;
 
 import org.apache.http.impl.client.DefaultHttpClient;
