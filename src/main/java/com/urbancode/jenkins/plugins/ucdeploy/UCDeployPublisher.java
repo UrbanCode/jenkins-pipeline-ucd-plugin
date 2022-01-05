@@ -495,8 +495,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         for (UCDeploySite site : sites) {
             if (site.getDisplayName().equals(siteName)) {
                 return site;
-            } else {
-                UCDeployPublisher.ts.getLogger().println("UCD Profile name and site name is not same");    
             }
         }
         return null;
@@ -548,7 +546,10 @@ ts = listener;
         }
 
         UCDeploySite udSite = getSite();
-        DefaultHttpClient udClient;  // not serializable
+        if (null == udSite) {
+            throw new AbortException("Profile name and display name is NOT same");
+        }
+    DefaultHttpClient udClient;  // not serializable
 
         if (altUserChecked()) {
             if (getAltUsername().equals("")) {
@@ -561,19 +562,7 @@ ts = listener;
             udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
         }
         else {
-            udClient = null;
-            try {
-                if (udSite == null){
-                    listener.getLogger().println("[***********UDSITE is NULL]");    
-                }
-                udClient = udSite.getClient();
-            } catch(Exception e) {
-                listener.getLogger().println("[Error starts here...]");
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw)); 
-                String exceptionAsString = sw.toString();
-                listener.getLogger().println("[Error with getClient]"+ exceptionAsString);
-            }
+            udClient = udSite.getClient();
         }
 
         EnvVars envVars = build.getEnvironment(listener);

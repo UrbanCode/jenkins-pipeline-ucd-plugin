@@ -100,7 +100,7 @@ public class UCDeploySite implements Serializable {
         this(profileName, url, user, Secret.fromString(password), trustAllCerts);
     }
 
-    public DefaultHttpClient getClient() throws Exception{
+    public DefaultHttpClient getClient() {
         if (client == null) {
             client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
         }
