@@ -27,14 +27,6 @@
       </delivery>
     </dependency>
 
-    <!-- <dependency>
-      <cs-project name='Apache HttpComponents' />
-      <criteria stamp='4.3.4' status='success' />
-      <delivery artifact-set='lib'>
-        <directory>lib</directory>
-      </delivery>
-    </dependency> -->
-
     <dependency>
       <cs-project name="Apache-log4j"/>
       <criteria stamp="1.2.16" />

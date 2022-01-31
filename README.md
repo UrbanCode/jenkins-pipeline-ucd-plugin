@@ -94,7 +94,7 @@ node {
 
 ## Release Notes
 ### Version 2.26
- Fixed : Removed httpcore dependencies 
+ Fixed : Removed httpcore dependencies as it is no more used 
 
 ### Version 2.25
  Fixed : Removed checkbox to push failed build as it was causing Trigger version Import step to work improperly
