@@ -102,7 +102,12 @@ public class UCDeploySite implements Serializable {
 
     public DefaultHttpClient getClient() {
         if (client == null) {
+            UCDeployPublisher.ts.getLogger().println("In getClient Before the UCDRestClient is called");
+            UCDeployPublisher.ts.getLogger().println("User is" + user);
+            UCDeployPublisher.ts.getLogger().println("password is" + password.toString());
             client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
+            UCDeployPublisher.ts.getLogger().println("After the UCDRestClient is called");
+            UCDeployPublisher.ts.getLogger().println("In getClient Client that we get after the call to UCDRestClient is" + client);
         }
         return client;
     }
@@ -118,9 +123,12 @@ public class UCDeploySite implements Serializable {
      */
     public String getDisplayName() {
         if (StringUtils.isEmpty(profileName)) {
+            UCDeployPublisher.ts.getLogger().println("In getDisplayName in if scope profileName is" + profileName);
+            UCDeployPublisher.ts.getLogger().println("Url returned by getDisplayName function  is" + profileName);
             return url;
         } else {
-            return profileName;
+            UCDeployPublisher.ts.getLogger().println("In getDisplayName in else scope profileName is" + profileName);
+            return profileName
         }
     }
 
@@ -130,6 +138,7 @@ public class UCDeploySite implements Serializable {
      * @return the profile name
      */
     public String getProfileName() {
+        UCDeployPublisher.ts.getLogger().println("In getProfileName profileName is" + profileName);
         return profileName;
     }
 
@@ -142,6 +151,7 @@ public class UCDeploySite implements Serializable {
     @DataBoundSetter
     public void setProfileName(String profileName) {
         this.profileName = profileName;
+        UCDeployPublisher.ts.getLogger().println("In setProfileName profileName is" + profileName);
     }
 
     /**
@@ -249,12 +259,15 @@ public class UCDeploySite implements Serializable {
      */
     public void verifyConnection() throws Exception {
         URI uri = UriBuilder.fromPath(url).path("rest").path("state").build();
+        UCDeployPublisher.ts.getLogger().println("In verifyConnection the uri we get is" + uri);
         executeJSONGet(uri);
     }
 
     public void executeJSONGet(URI uri) throws Exception {
         String result = null;
+        UCDeployPublisher.ts.getLogger().println("In executeJSONGet the result we get is" + result);
         HttpClient client = getClient();
+        UCDeployPublisher.ts.getLogger().println("In executeJSONGet the client we get is" + client);
         HttpGet method = new HttpGet(uri.toString());
         try {
             HttpResponse response = client.execute(method);
