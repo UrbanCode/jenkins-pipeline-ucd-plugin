@@ -128,7 +128,7 @@ public class UCDeploySite implements Serializable {
             return url;
         } else {
             UCDeployPublisher.ts.getLogger().println("In getDisplayName in else scope profileName is" + profileName);
-            return profileName
+            return profileName;
         }
     }
 
