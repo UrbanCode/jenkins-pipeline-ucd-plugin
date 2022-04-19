@@ -55,7 +55,8 @@ import com.urbancode.jenkins.plugins.ucdeploy.UCDeployPublisher.UserBlock;
 public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public static final GlobalConfig.GlobalConfigDescriptor GLOBALDESCRIPTOR = GlobalConfig.getGlobalConfigDescriptor();
-
+    
+    public static hudson.model.TaskListener ts;
     private String siteName;
     private UserBlock altUser;
     private VersionBlock component;
@@ -504,6 +505,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     @Override
     public void perform(final Run<?, ?> build, FilePath workspace, Launcher launcher, final TaskListener listener)
             throws AbortException, InterruptedException, IOException {
+        ts = listener;
         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
                 throw new AbortException("Skip artifacts upload to IBM UrbanCode Deploy - build failed or aborted.");
         }
