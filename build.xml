@@ -186,6 +186,7 @@
          ================================================================== -->
     <target name="jar-main" depends="prepare, set-version-property">
         <exec executable="${mvn}">
+          <arg value="dependency:tree"/>
           <arg value="package"/>
           <arg value="-Denv.buildLife=${plugin.version}"/>
         </exec>
