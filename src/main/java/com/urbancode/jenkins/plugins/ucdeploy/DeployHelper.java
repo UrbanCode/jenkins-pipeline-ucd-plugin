@@ -62,6 +62,7 @@ public class DeployHelper {
     private URI ucdUrl;
 
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
+        UCDeployPublisher.ts.getLogger().println("Inside Deploy helper")
         this.ucdUrl = ucdUrl;
     	appClient = new ApplicationClient(ucdUrl, httpClient);
         this.listener = listener;
@@ -206,8 +207,10 @@ public class DeployHelper {
         public String getMethod(String uri) throws Exception{
             String result ="";
             HttpGet method = new HttpGet(uri);
+            UCDeployPublisher.ts.getLogger().println("Inside getMethod of Deploy helper ")
             try {
-                HttpResponse response = UCDeploySite.client.execute(method);
+                HttpResponse UCDeployPublisher.ts.getLogger().println("Inside getMethod of Deploy helper ") = UCDeploySite.client.execute(method);
+                UCDeployPublisher.ts.getLogger().println("The response from Udeploydite client is received")
                 int responseCode = response.getStatusLine().getStatusCode();
                 if (responseCode == 401) {
                     throw new Exception("Error connecting to IBM UrbanCode Deploy: Invalid user and/or password");
@@ -220,6 +223,7 @@ public class DeployHelper {
                     // return it as a String
                     result = EntityUtils.toString(entity);
                     System.out.println(result);
+                    UCDeployPublisher.ts.getLogger().println("The response from Udeploydite client we got is" + result)
                 }
             }catch (Exception e) {
                 e.printStackTrace();

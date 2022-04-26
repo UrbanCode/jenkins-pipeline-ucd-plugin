@@ -56,6 +56,7 @@ public class VersionHelper {
     private EnvVars envVars;
 
     public VersionHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
+        UCDeployPublisher.ts.getLogger().println("Inside version Helper")
         appClient = new ApplicationClient(ucdUrl, httpClient);
         compClient = new ComponentClient(ucdUrl, httpClient);
         propClient = new PropertyClient(ucdUrl, httpClient);
