@@ -76,7 +76,7 @@
     </dependency>
 
     <dependency>
-      <ah-project name='uDeployRestClient' workflow='build workflow [master]' />
+      <ah-project name='uDeployRestClient' workflow='build workflow [PLUGINS-3650-debug-logger]' />
       <criteria build-life-id="1128154" />
       <delivery artifact-set='Dist'>
         <directory>lib</directory>
