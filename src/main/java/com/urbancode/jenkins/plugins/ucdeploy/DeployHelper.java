@@ -314,7 +314,7 @@ public class DeployHelper {
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
         Boolean skipWait = deployBlock.getSkipWait();
-        Boolean resApp = deployBlock.resApp();
+        Boolean resApp = deployBlock.getResApp();
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
