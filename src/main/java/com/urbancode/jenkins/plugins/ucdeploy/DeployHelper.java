@@ -69,10 +69,10 @@ public class DeployHelper {
     }
 
     /**
-         * Verify Skip App prop checkbox 
-         * @param resApp
-         * @deprecated FormFieldValidator
-         */
+     * Verify Skip App prop checkbox 
+     * @param resApp
+     * @deprecated FormFieldValidator
+     */
 
     public static class DeployBlock {
         private String deployApp;
