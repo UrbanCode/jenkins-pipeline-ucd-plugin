@@ -68,11 +68,13 @@ public class DeployHelper {
         this.envVars = envVars;
     }
 
+
     public static class DeployBlock {
         private String deployApp;
         private String deployEnv;
         private String deployProc;
         private Boolean skipWait;
+        private Boolean resApp;
         private CreateProcessBlock createProcess;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
@@ -86,6 +88,7 @@ public class DeployHelper {
             String deployEnv,
             String deployProc,
             Boolean skipWait,
+            Boolean resApp,
             CreateProcessBlock createProcess,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
@@ -97,6 +100,7 @@ public class DeployHelper {
             this.deployEnv = deployEnv;
             this.deployProc = deployProc;
             this.skipWait = skipWait;
+            this.resApp = resApp;
             this.createProcess = createProcess;
             this.createSnapshot = createSnapshot;
             this.deployVersions = deployVersions;
@@ -139,6 +143,14 @@ public class DeployHelper {
         public Boolean getSkipWait() {
             if (skipWait != null) {
                 return skipWait;
+            }
+            else {
+                return false;
+            }
+        }
+        public Boolean getResApp() {
+            if (resApp != null) {
+                return resApp;
             }
             else {
                 return false;
@@ -303,6 +315,7 @@ public class DeployHelper {
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
         Boolean skipWait = deployBlock.getSkipWait();
+        Boolean resApp = deployBlock.getResApp();
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
@@ -505,12 +518,14 @@ public class DeployHelper {
                 String uri2 = ucdUrl.toString()+"/property/propSheet/applications%26"+applicationId+"%26propSheet."+versionCount;
                 String data2 = deployBlock.getMethod(uri2);
                 JSONObject PropertyObject = new JSONObject(data2);
-                JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));  
-                for(int i=0; i < array1.length(); i++)   
-                {  
-                    if(array1.getJSONObject(i).getString("secure") == "false"){
-                        listener.getLogger().println("Env : "+array1.getJSONObject(i).getString("name")+"="+array1.getJSONObject(i).getString("value"));
-                        deployBlock.createGlobalEnvironmentVariables(array1.getJSONObject(i).getString("name"),array1.getJSONObject(i).getString("value"));
+                JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));
+                if (resApp == false) {
+                    for(int i=0; i < array1.length(); i++)   
+                    {  
+                        if(array1.getJSONObject(i).getString("secure") == "false"){
+                            listener.getLogger().println("Env : "+array1.getJSONObject(i).getString("name")+"="+array1.getJSONObject(i).getString("value"));
+                            deployBlock.createGlobalEnvironmentVariables(array1.getJSONObject(i).getString("name"),array1.getJSONObject(i).getString("value"));
+                        }
                     }
                 }
             }
