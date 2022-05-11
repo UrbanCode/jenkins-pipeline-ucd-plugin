@@ -20,7 +20,7 @@
           </f:entry>
           <f:entry title="Trust All Certificates" help="${helpURL}/global/trust.html">
             <f:checkbox name="trustAllCerts" checked="${site.trustAllCerts}"/>
-          </f:entry>          
+          </f:entry>
           <f:entry title="">
             <div style="text-align: right">
               <f:repeatableDeleteButton/>
