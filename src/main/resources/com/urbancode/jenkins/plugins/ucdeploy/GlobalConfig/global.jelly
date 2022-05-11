@@ -21,8 +21,8 @@
           <f:entry title="Trust All Certificates" help="${helpURL}/global/trust.html">
             <f:checkbox name="trustAllCerts" checked="${site.trustAllCerts}"/>
           </f:entry>
-          <f:entry field="resApp" title="Skip Application Properties import" help="${helpURL}/deploy/resApp.html">
-              <f:checkbox/>
+          <f:entry title="Skip Application Properties import" help="${helpURL}/deploy/resApp.html">
+              <f:checkbox name="resApp" checked="${site.resApp}"/>
           </f:entry>
           <f:entry title="">
             <div style="text-align: right">

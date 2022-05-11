@@ -68,6 +68,12 @@ public class DeployHelper {
         this.envVars = envVars;
     }
 
+    /**
+         * Verify Skip App prop checkbox 
+         * @param resApp
+         * @deprecated FormFieldValidator
+         */
+
     public static class DeployBlock {
         private String deployApp;
         private String deployEnv;
