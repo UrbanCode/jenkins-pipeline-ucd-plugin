@@ -34,8 +34,8 @@
     </f:entry>
   </f:section>
   <f:section title="Global Checkbox to skip application properties import">
-    <f:entry field="resApp" title="Skip Application Properties import" help="${helpURL}/deploy/resApp.html">
-      <f:checkbox/>
-    </f:entry>
-  </f:section>
+		<f:entry field="resApp">
+			<f:checkbox title="Skip Application Properties import" default="false"/>
+		</f:entry>
+	</f:section>
 </j:jelly>
