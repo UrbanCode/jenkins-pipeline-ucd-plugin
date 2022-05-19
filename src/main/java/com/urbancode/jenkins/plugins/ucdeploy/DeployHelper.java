@@ -74,7 +74,6 @@ public class DeployHelper {
         private String deployEnv;
         private String deployProc;
         private Boolean skipWait;
-        private Boolean resApp;
         private CreateProcessBlock createProcess;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
@@ -88,7 +87,6 @@ public class DeployHelper {
             String deployEnv,
             String deployProc,
             Boolean skipWait,
-            Boolean resApp,
             CreateProcessBlock createProcess,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
@@ -100,7 +98,6 @@ public class DeployHelper {
             this.deployEnv = deployEnv;
             this.deployProc = deployProc;
             this.skipWait = skipWait;
-            this.resApp = resApp;
             this.createProcess = createProcess;
             this.createSnapshot = createSnapshot;
             this.deployVersions = deployVersions;
@@ -143,14 +140,6 @@ public class DeployHelper {
         public Boolean getSkipWait() {
             if (skipWait != null) {
                 return skipWait;
-            }
-            else {
-                return false;
-            }
-        }
-        public Boolean getResApp() {
-            if (resApp != null) {
-                return resApp;
             }
             else {
                 return false;
@@ -315,7 +304,6 @@ public class DeployHelper {
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
         Boolean skipWait = deployBlock.getSkipWait();
-        Boolean resApp = deployBlock.getResApp();
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
@@ -519,7 +507,9 @@ public class DeployHelper {
                 String data2 = deployBlock.getMethod(uri2);
                 JSONObject PropertyObject = new JSONObject(data2);
                 JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));
-                if (resApp == false) {
+                boolean isSkipProps = UCDeploySite.skipProps;
+                listener.getLogger().println("********** resApp value is " + isSkipProps);
+                if (isSkipProps == false) {
                     for(int i=0; i < array1.length(); i++)   
                     {  
                         if(array1.getJSONObject(i).getString("secure") == "false"){

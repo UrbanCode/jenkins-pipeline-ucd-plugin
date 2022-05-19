@@ -47,6 +47,8 @@ public class UCDeploySite implements Serializable {
 
     private boolean trustAllCerts;
 
+    public static boolean skipProps;
+
     public static DefaultHttpClient client;
 
     /**
@@ -70,13 +72,15 @@ public class UCDeploySite implements Serializable {
             String url,
             String user,
             Secret password,
-            boolean trustAllCerts)
+            boolean trustAllCerts,
+            boolean skipProps)
     {
         this.profileName = profileName;
         this.url = url;
         this.user = user;
         this.password = password;
         this.trustAllCerts = trustAllCerts;
+        this.skipProps = skipProps;
         client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
     }
 
@@ -95,9 +99,10 @@ public class UCDeploySite implements Serializable {
             String url,
             String user,
             String password,
-            boolean trustAllCerts)
+            boolean trustAllCerts,
+            boolean skipProps)
     {
-        this(profileName, url, user, Secret.fromString(password), trustAllCerts);
+        this(profileName, url, user, Secret.fromString(password), trustAllCerts, skipProps);
     }
 
     public DefaultHttpClient getClient() {
@@ -195,7 +200,7 @@ public class UCDeploySite implements Serializable {
     /**
      * Sets the username.
      *
-     * @param username
+     * @param user
      *          the new username
      */
     @DataBoundSetter
@@ -240,6 +245,25 @@ public class UCDeploySite implements Serializable {
     @DataBoundSetter
     public void setTrustAllCerts(boolean trustAllCerts) {
         this.trustAllCerts = trustAllCerts;
+    }
+
+    /**
+     * Gets skipProps
+     *
+     * @return skipProps
+     */
+    public boolean isSkipProps() {
+        return skipProps;
+    }
+
+    /**
+     * Sets skipProps
+     *
+     * @param skipProps
+     */
+    @DataBoundSetter
+    public void setSkipProps(boolean skipProps) {
+        this.skipProps = skipProps;
     }
 
     /**

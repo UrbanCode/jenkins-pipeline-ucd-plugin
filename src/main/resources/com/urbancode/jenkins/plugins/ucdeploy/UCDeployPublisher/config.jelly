@@ -124,9 +124,6 @@
             <f:entry field="skipWait" title="Skip Wait" help="${helpURL}/deploy/skipwait.html">
               <f:checkbox/>
             </f:entry>
-            <f:entry field="resApp" title="Skip Application Properties import" help="${helpURL}/deploy/resApp.html">
-              <f:checkbox/>
-            </f:entry>
             <f:optionalBlock name="createProcess"
                              title="Create As New Application Process"
                              help="${helpURL}/deploy/create/help.html"
