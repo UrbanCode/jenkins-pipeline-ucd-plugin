@@ -47,7 +47,7 @@ public class UCDeploySite implements Serializable {
 
     private boolean trustAllCerts;
 
-    public static DefaultHttpClient client;
+    public DefaultHttpClient client;
 
     /**
      * Instantiates a new UrbanDeploy site.
