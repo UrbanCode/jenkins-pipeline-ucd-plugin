@@ -69,7 +69,7 @@ public class DeployHelper {
         this.envVars = envVars;
     }
 
-    public static class DeployBlock {
+    public class DeployBlock {
         private String deployApp;
         private String deployEnv;
         private String deployProc;
