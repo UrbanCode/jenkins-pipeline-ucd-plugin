@@ -7,11 +7,7 @@
 
 package com.urbancode.jenkins.plugins.ucdeploy;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import java.io.BufferedReader;
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,9 +32,13 @@ import java.util.UUID;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -56,7 +56,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 @SuppressWarnings("deprecation") // Triggered by DefaultHttpClient
 public class DeployHelper {
-    private DefualtHttpClient httpClient;
+    private DefaultHttpClient httpClient;
     private ApplicationClient appClient;
     private TaskListener listener;
     private EnvVars envVars;
