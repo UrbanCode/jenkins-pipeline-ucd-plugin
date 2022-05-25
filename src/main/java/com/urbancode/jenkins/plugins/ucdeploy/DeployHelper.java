@@ -211,7 +211,7 @@ public class DeployHelper {
             HttpGet method = new HttpGet(uri);
             UCDeployPublisher.ts.getLogger().println("Inside getMethod of Deploy helper ");
             try {
-                HttpResponse response = DeployHelper.this.client.execute(method);
+                HttpResponse response = DeployHelper.this.httpClient.execute(method);
                 UCDeployPublisher.ts.getLogger().println("The response from Udeploydite client is received");
                 int responseCode = response.getStatusLine().getStatusCode();
                 if (responseCode == 401) {
