@@ -65,7 +65,7 @@ public class DeployHelper {
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
         UCDeployPublisher.ts.getLogger().println("Inside Deploy helper");
         this.ucdUrl = ucdUrl;
-        this.httpClient = httpClient
+        this.httpClient = httpClient;
     	appClient = new ApplicationClient(ucdUrl, httpClient);
         this.listener = listener;
         this.envVars = envVars;
