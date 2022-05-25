@@ -56,6 +56,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 @SuppressWarnings("deprecation") // Triggered by DefaultHttpClient
 public class DeployHelper {
+    private DefualtHttpClient httpClient;
     private ApplicationClient appClient;
     private TaskListener listener;
     private EnvVars envVars;
@@ -64,6 +65,7 @@ public class DeployHelper {
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
         UCDeployPublisher.ts.getLogger().println("Inside Deploy helper");
         this.ucdUrl = ucdUrl;
+        this.httpClient = httpClient
     	appClient = new ApplicationClient(ucdUrl, httpClient);
         this.listener = listener;
         this.envVars = envVars;
@@ -209,7 +211,7 @@ public class DeployHelper {
             HttpGet method = new HttpGet(uri);
             UCDeployPublisher.ts.getLogger().println("Inside getMethod of Deploy helper ");
             try {
-                HttpResponse response = UCDeploySite.client.execute(method);
+                HttpResponse response = DeployHelper.this.client.execute(method);
                 UCDeployPublisher.ts.getLogger().println("The response from Udeploydite client is received");
                 int responseCode = response.getStatusLine().getStatusCode();
                 if (responseCode == 401) {
@@ -314,12 +316,6 @@ public class DeployHelper {
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
-        // create process
-        if (deployBlock.createProcessChecked()) {
-            ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
-            processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcess());
-        }
-
         // required fields
         if (deployApp.isEmpty()) {
             throw new AbortException("Deploy Application is a required field for deployment.");
@@ -330,7 +326,16 @@ public class DeployHelper {
         if (deployProc.isEmpty()) {
             throw new AbortException("Deploy Process is a required field for deployment.");
         }
-        
+
+        // Do an initial query, ensures authenticated session and that app exists.
+        DeployHelper.this.appClient.getApplication(deployApp);
+
+        // create process
+        if (deployBlock.createProcessChecked()) {
+            ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
+            processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcess());
+        }
+
         /*Commenting to support following :
            1. Operational component process which needs no version.
            2. Running application generic process 

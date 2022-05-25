@@ -47,8 +47,6 @@ public class UCDeploySite implements Serializable {
 
     private boolean trustAllCerts;
 
-    public DefaultHttpClient client;
-
     /**
      * Instantiates a new UrbanDeploy site.
      *
@@ -77,7 +75,6 @@ public class UCDeploySite implements Serializable {
         this.user = user;
         this.password = password;
         this.trustAllCerts = trustAllCerts;
-        client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
     }
 
     /**
@@ -101,15 +98,7 @@ public class UCDeploySite implements Serializable {
     }
 
     public DefaultHttpClient getClient() {
-        if (client == null) {
-            UCDeployPublisher.ts.getLogger().println("In getClient Before the UCDRestClient is called");
-            UCDeployPublisher.ts.getLogger().println("User is" + user);
-            UCDeployPublisher.ts.getLogger().println("password is" + password.toString());
-            client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
-            UCDeployPublisher.ts.getLogger().println("After the UCDRestClient is called");
-            UCDeployPublisher.ts.getLogger().println("In getClient Client that we get after the call to UCDRestClient is" + client);
-        }
-        return client;
+        return getTempClient(user, password);
     }
 
     public DefaultHttpClient getTempClient(String tempUser, Secret tempPassword) {
