@@ -524,7 +524,12 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
         }
         else {
-            udClient = udSite.getClient();
+            try {
+                udClient = udSite.getClient();
+            }
+            catch (Error) {
+                listener.getLogger().println("The Error while calling the getClient method in the perform finction is" + Error);
+            }
         }
 
         EnvVars envVars = build.getEnvironment(listener);
