@@ -525,7 +525,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         }
         else {
             try {
-                udClient = udSite.getClient();
+                udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
             }
             catch (Exception e) {
                 System.out.println("In The Error while calling the getClient method in the perform finction is" + e);
