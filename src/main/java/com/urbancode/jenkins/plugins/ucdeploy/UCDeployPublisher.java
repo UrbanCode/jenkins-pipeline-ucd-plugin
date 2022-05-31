@@ -527,8 +527,8 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             try {
                 udClient = udSite.getClient();
             }
-            catch (Error) {
-                listener.getLogger().println("The Error while calling the getClient method in the perform finction is" + Error);
+            catch (Exception e) {
+                System.out.println("In The Error while calling the getClient method in the perform finction is" + e);
             }
         }
 
