@@ -47,7 +47,7 @@ public class ComponentHelper {
 
     public ComponentHelper(ApplicationClient appClient, ComponentClient compClient, TaskListener listener,
             EnvVars envVars) {
-        UCDeployPublisher.ts.getLogger().println("Inside Component helper")
+        UCDeployPublisher.ts.getLogger().println("Inside Component helper");
         this.appClient = appClient;
         this.compClient = compClient;
         this.listener = listener;
