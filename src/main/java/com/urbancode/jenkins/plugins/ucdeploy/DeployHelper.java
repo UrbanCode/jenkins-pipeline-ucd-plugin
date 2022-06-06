@@ -62,6 +62,7 @@ public class DeployHelper {
     private URI ucdUrl;
 
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
+        UCDeployPublisher.ts.getLogger().println("Inside Deploy helper")
         this.ucdUrl = ucdUrl;
     	appClient = new ApplicationClient(ucdUrl, httpClient);
         this.listener = listener;
@@ -207,6 +208,8 @@ public class DeployHelper {
         public String getMethod(String uri) throws Exception{
             String result ="";
             HttpGet method = new HttpGet(uri);
+            UCDeployPublisher.ts.getLogger().println("Inside getMethod of Deploy helper ")
+            UCDeployPublisher.ts.getLogger().println("The response from Udeploydite client is received")
             try {
                 HttpResponse response = UCDeploySite.client.execute(method);
                 int responseCode = response.getStatusLine().getStatusCode();
@@ -220,6 +223,7 @@ public class DeployHelper {
                 if (entity != null) {
                     // return it as a String
                     result = EntityUtils.toString(entity);
+                    UCDeployPublisher.ts.getLogger().println("The response from Udeploydite client we got is" + result)
                     System.out.println(result);
                 }
             }catch (Exception e) {
