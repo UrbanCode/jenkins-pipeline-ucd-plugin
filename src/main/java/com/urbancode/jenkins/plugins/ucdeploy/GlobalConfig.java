@@ -112,6 +112,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
          * Verify connectivity to the UCD site
          * @param req
          * @param rsp
+         * @param profileName
          * @param url
          * @param user
          * @param password
@@ -124,6 +125,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
         public void doTestConnection(
                 StaplerRequest req,
                 StaplerResponse rsp,
+                @QueryParameter("profileName") final String profileName,
                 @QueryParameter("url") final String url,
                 @QueryParameter("user") final String user,
                 @QueryParameter("password") final String password,
@@ -133,7 +135,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
                 @Override
                 protected void check() throws IOException, ServletException {
                     try {
-                        UCDeploySite site = new UCDeploySite(null, url, user, password, trustAllCerts, false);
+                        UCDeploySite site = new UCDeploySite(profileName, url, user, password, trustAllCerts, false);
                         site.verifyConnection();
                         ok("Success");
                     }
