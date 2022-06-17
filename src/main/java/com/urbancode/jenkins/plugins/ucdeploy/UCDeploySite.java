@@ -11,6 +11,7 @@ import com.urbancode.ud.client.UDRestClient;
 
 import hudson.AbortException;
 import hudson.util.Secret;
+import hudson.model.TaskListener;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -34,6 +35,7 @@ import org.kohsuke.stapler.DataBoundSetter;
  */
 @SuppressWarnings("deprecation") // Triggered by DefaultHttpClient
 public class UCDeploySite implements Serializable {
+    private TaskListener listener;
 
     private static final long serialVersionUID = -8723534991244260459L;
 
@@ -101,13 +103,13 @@ public class UCDeploySite implements Serializable {
     }
 
     public DefaultHttpClient getClient() {
-        System.out.println("[UCD] getClient() client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);");
-        client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
+        listener.getLogger().println("[UCD] getClient() client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);");
+        client = UDRestClient.createHttpClient(user, password.getPlainText(), trustAllCerts);
         return client;
     }
 
     public DefaultHttpClient getTempClient(String tempUser, Secret tempPassword) {
-        return UDRestClient.createHttpClient(tempUser, tempPassword.toString(), trustAllCerts);
+        return UDRestClient.createHttpClient(tempUser, tempPassword.getPlainText(), trustAllCerts);
     }
 
     /**
