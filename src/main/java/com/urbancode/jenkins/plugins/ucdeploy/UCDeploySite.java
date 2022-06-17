@@ -98,20 +98,20 @@ public class UCDeploySite implements Serializable {
             String profileName,
             String url,
             String user,
-            String password,
+            Secret password,
             boolean trustAllCerts)
     {
-        this(profileName, url, user, Secret.fromString(password), trustAllCerts);
+        this(profileName, url, user, password, trustAllCerts);
     }
 
     public DefaultHttpClient getClient() {
         listener.getLogger().println("[UCD] getClient() client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);");
-        client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
+        client = UDRestClient.createHttpClient(user, password.getPlainText(), trustAllCerts);
         return client;
     }
 
     public DefaultHttpClient getTempClient(String tempUser, Secret tempPassword) {
-        return UDRestClient.createHttpClient(tempUser, tempPassword.toString(), trustAllCerts);
+        return UDRestClient.createHttpClient(tempUser, tempPassword.getPlainText(), trustAllCerts);
     }
 
     /**
