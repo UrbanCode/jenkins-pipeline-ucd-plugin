@@ -101,7 +101,11 @@ public class UCDeploySite implements Serializable {
             Secret password,
             boolean trustAllCerts)
     {
-        this(profileName, url, user, password, trustAllCerts);
+        this.password = password;
+        this.profileName = profileName;
+        this.url = url;
+        this.user = user;
+        this.trustAllCerts = trustAllCerts;
     }
 
     public DefaultHttpClient getClient() {
