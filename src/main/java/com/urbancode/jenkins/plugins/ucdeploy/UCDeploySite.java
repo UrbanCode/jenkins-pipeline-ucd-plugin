@@ -11,6 +11,7 @@ import com.urbancode.ud.client.UDRestClient;
 
 import hudson.AbortException;
 import hudson.util.Secret;
+import hudson.model.TaskListener;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -34,6 +35,7 @@ import org.kohsuke.stapler.DataBoundSetter;
  */
 @SuppressWarnings("deprecation") // Triggered by DefaultHttpClient
 public class UCDeploySite implements Serializable {
+    private TaskListener listener;
 
     private static final long serialVersionUID = -8723534991244260459L;
 
@@ -70,13 +72,15 @@ public class UCDeploySite implements Serializable {
             String url,
             String user,
             Secret password,
-            boolean trustAllCerts)
+            boolean trustAllCerts,
+            TaskListener listener)
     {
         this.profileName = profileName;
         this.url = url;
         this.user = user;
         this.password = password;
         this.trustAllCerts = trustAllCerts;
+        this.listener = listener;
         client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
     }
 
@@ -94,21 +98,24 @@ public class UCDeploySite implements Serializable {
             String profileName,
             String url,
             String user,
-            String password,
+            Secret password,
             boolean trustAllCerts)
     {
-        this(profileName, url, user, Secret.fromString(password), trustAllCerts);
+        this.password = password;
+        this.profileName = profileName;
+        this.url = url;
+        this.user = user;
+        this.trustAllCerts = trustAllCerts;
     }
 
     public DefaultHttpClient getClient() {
-        if (client == null) {
-            client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
-        }
+        listener.getLogger().println("[UCD] getClient() client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);");
+        client = UDRestClient.createHttpClient(user, password.getPlainText(), trustAllCerts);
         return client;
     }
 
     public DefaultHttpClient getTempClient(String tempUser, Secret tempPassword) {
-        return UDRestClient.createHttpClient(tempUser, tempPassword.toString(), trustAllCerts);
+        return UDRestClient.createHttpClient(tempUser, tempPassword.getPlainText(), trustAllCerts);
     }
 
     /**

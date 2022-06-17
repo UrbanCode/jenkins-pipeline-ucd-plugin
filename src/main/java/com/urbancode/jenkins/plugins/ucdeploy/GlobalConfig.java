@@ -14,7 +14,7 @@ import hudson.model.JobPropertyDescriptor;
 import hudson.model.Job;
 import hudson.util.CopyOnWriteList;
 import hudson.util.FormFieldValidator;
-
+import hudson.util.Secret;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -126,7 +126,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
                 StaplerResponse rsp,
                 @QueryParameter("url") final String url,
                 @QueryParameter("user") final String user,
-                @QueryParameter("password") final String password,
+                @QueryParameter("password") final Secret password,
                 @QueryParameter("trustAllCerts") final boolean trustAllCerts)
         throws IOException, ServletException {
             new FormFieldValidator(req, rsp, true) {
