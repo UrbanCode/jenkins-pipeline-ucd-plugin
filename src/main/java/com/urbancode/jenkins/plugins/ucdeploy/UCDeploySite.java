@@ -101,7 +101,7 @@ public class UCDeploySite implements Serializable {
             String password,
             boolean trustAllCerts)
     {
-        this(profileName, url, user, Secret.fromString(password), trustAllCerts);
+        this(profileName, url, user, Secret.fromString(password).getPlainText(), trustAllCerts);
     }
 
     public DefaultHttpClient getClient() {
