@@ -72,13 +72,15 @@ public class UCDeploySite implements Serializable {
             String url,
             String user,
             Secret password,
-            boolean trustAllCerts)
+            boolean trustAllCerts,
+            TaskListener listener)
     {
         this.profileName = profileName;
         this.url = url;
         this.user = user;
         this.password = password;
         this.trustAllCerts = trustAllCerts;
+        this.listener = listener
         client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
     }
 
