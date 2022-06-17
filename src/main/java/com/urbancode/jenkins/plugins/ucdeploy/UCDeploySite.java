@@ -80,7 +80,7 @@ public class UCDeploySite implements Serializable {
         this.user = user;
         this.password = password;
         this.trustAllCerts = trustAllCerts;
-        this.listener = listener
+        this.listener = listener;
         client = UDRestClient.createHttpClient(user, password.toString(), trustAllCerts);
     }
 
