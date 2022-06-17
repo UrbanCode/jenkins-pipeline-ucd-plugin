@@ -133,7 +133,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
                 @Override
                 protected void check() throws IOException, ServletException {
                     try {
-                        UCDeploySite site = new UCDeploySite(null, url, user, password, trustAllCerts);
+                        UCDeploySite site = new UCDeploySite(null, url, user, password, trustAllCerts, null);
                         site.verifyConnection();
                         ok("Success");
                     }
