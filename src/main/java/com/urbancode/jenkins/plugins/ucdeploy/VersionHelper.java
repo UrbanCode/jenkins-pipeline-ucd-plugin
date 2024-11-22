@@ -140,6 +140,7 @@ public class VersionHelper {
 
         // create component
         if (versionBlock.createComponentChecked()) {
+        	log.info("[This is a test log]...");
             log.info("[UrbanCode Deploy] create component starts...");
             componentHelper.createComponent(componentName,
                                             versionBlock.getCreateComponent(),
