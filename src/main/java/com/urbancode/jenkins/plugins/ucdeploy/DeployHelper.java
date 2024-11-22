@@ -67,6 +67,7 @@ public class DeployHelper {
     private boolean skipProps;
 
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars, boolean skipProps) {
+        UCDeployPublisher.ts.getLogger().println("Inside Deploy helper");
         this.ucdUrl = ucdUrl;
     	appClient = new ApplicationClient(ucdUrl, httpClient);
         this.listener = listener;
