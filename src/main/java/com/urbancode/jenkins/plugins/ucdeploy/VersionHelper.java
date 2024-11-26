@@ -162,6 +162,7 @@ public class VersionHelper {
             String version = envVars.expand(pushBlock.getPushVersion());
             listener.getLogger().println("Creating new component version and Uploading files to version '" + version + "' on component '" + componentName +
                                          "'");
+            log.info("Creating new component version and Uploading files to version '" + version + "' on component '" + componentName + "'");
             if (version == null || version.isEmpty() || version.length() > 255) {
                 throw new AbortException("Failed to create version '" + version + "' in UrbanCode Deploy. UrbanCode Deploy " +
                                          "version name length must be between 1 and  255 characters long. (Current length: " +
