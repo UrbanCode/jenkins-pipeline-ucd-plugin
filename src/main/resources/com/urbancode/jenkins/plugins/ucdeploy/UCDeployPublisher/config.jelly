@@ -163,6 +163,21 @@
                 </div>
               </f:block>
             </f:optionalBlock>
+            <f:optionalBlock name="createSnapshot"
+                             title="Create Snapshot of Component Version"
+                             help="${helpURL}/deploy/snapshot/help.html"
+                             checked="${instance.createSnapshotChecked()}">
+              <f:block>
+                <div>
+                  <f:entry field="snapshotNameNew" title="Environment Snapshot Name" help="${helpURL}/deploy/snapshot/name.html">
+                    <f:textbox default="${BUILD_ID}"/>
+                  </f:entry>
+                  <f:entry field="includeOnlyDeployVersionsNew" title="Include Only Deploy Versions" help="${helpURL}/deploy/deploy-snapshot-for-deploy-versions-only.html">
+                    <f:checkbox default="false"/>
+                  </f:entry>                  
+                </div>
+              </f:block>
+            </f:optionalBlock>
             <f:entry field="deployVersions" title="Snapshot/Component Versions" help="${helpURL}/deploy/versions.html">
               <f:textarea/>
             </f:entry>
