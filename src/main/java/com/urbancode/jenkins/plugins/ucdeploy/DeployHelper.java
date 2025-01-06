@@ -267,6 +267,8 @@ public class DeployHelper {
         private String snapshotName;
         private Boolean deployWithSnapshot;
         private Boolean updateSnapshotComp;
+        //Aded
+        private Boolean createSnapshotComp;
         private Boolean includeOnlyDeployVersions;
 
         @DataBoundConstructor
@@ -274,6 +276,8 @@ public class DeployHelper {
             this.snapshotName = snapshotName;
             this.deployWithSnapshot = deployWithSnapshot;
             this.updateSnapshotComp = updateSnapshotComp;
+            // Added
+            this.createSnapshotComp = createSnapshotComp;
             this.includeOnlyDeployVersions = includeOnlyDeployVersions;
         }
 
@@ -299,6 +303,17 @@ public class DeployHelper {
             }
         }
         
+        // Added
+        public Boolean createSnapshotComp() {
+            if (createSnapshotComp != null) {
+                return createSnapshotComp;
+            }
+            else {
+                return false;
+            }
+        }
+
+
         public Boolean getIncludeOnlyDeployVersions() {
             if (includeOnlyDeployVersions != null) {
                 return includeOnlyDeployVersions;
@@ -330,6 +345,7 @@ public class DeployHelper {
 
         // create process
         if (deployBlock.createProcessChecked()) {
+            
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
             processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcess());
         }
@@ -379,8 +395,10 @@ public class DeployHelper {
 
             try {
                 if (createSnapshot.getIncludeOnlyDeployVersions()) {
+                    listener.getLogger().println("[5555555555 - IF]");
                     appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
                 } else {
+                    listener.getLogger().println("[5555555555 - ELSE]");
                     appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
                 }
             } catch (Exception ex) {
