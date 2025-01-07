@@ -338,6 +338,7 @@ public class DeployHelper {
         String deployProc = envVars.expand(deployBlock.getDeployProc());
         Boolean skipWait = deployBlock.getSkipWait();
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
+        listener.getLogger().println("[deployVersions] '" + deployVersions + "'");
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
         CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshot();
@@ -389,6 +390,7 @@ public class DeployHelper {
             }
             else {
                 componentVersions = readComponentVersions(deployVersions);  // Versions to add to new snapshot
+                listener.getLogger().println("[componentVersions] '" + componentVersions + "'");
             }
 
             listener.getLogger().println("Creating environment snapshot '" + snapshot
@@ -419,6 +421,7 @@ public class DeployHelper {
 
             /* Create a map of component name to a list of its versions in the snapshot */
             for (int i = 0; i < snapshotVersions.length(); i++) {
+                listener.getLogger().println("[11111]");
                 JSONObject snapshotComponent = snapshotVersions.getJSONObject(i);
                 String name = snapshotComponent.getString("name");
                 JSONArray versions = snapshotComponent.getJSONArray("desiredVersions");
