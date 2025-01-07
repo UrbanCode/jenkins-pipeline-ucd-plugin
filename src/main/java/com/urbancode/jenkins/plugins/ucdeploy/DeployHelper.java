@@ -338,7 +338,6 @@ public class DeployHelper {
         String deployProc = envVars.expand(deployBlock.getDeployProc());
         Boolean skipWait = deployBlock.getSkipWait();
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
-        listener.getLogger().println("[deployVersions] '" + deployVersions + "'");
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
         CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshot();
@@ -399,6 +398,7 @@ public class DeployHelper {
             try {
                 if (createSnapshot.getIncludeOnlyDeployVersions()) {
                     listener.getLogger().println("[5555555555 - IF]");
+
                     appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
                 } else {
                     listener.getLogger().println("[5555555555 - ELSE]");
@@ -417,6 +417,8 @@ public class DeployHelper {
 
             listener.getLogger().println("Acquiring all versions of the snapshot.");
             JSONArray snapshotVersions = appClient.getSnapshotVersions(snapshot, deployApp);
+            listener.getLogger().println("[snapshotVersions] '" + snapshotVersions + "'");
+
             Map<String, JSONArray> compVersionMap = new HashMap<String, JSONArray>();
 
             /* Create a map of component name to a list of its versions in the snapshot */
@@ -450,7 +452,8 @@ public class DeployHelper {
                 for (String version : entry.getValue()) {
                     listener.getLogger().println("Adding component version '" + version +
                             "' of component '" + component + "' to snapshot.");
-                    appClient.addVersionToSnapshot(snapshot, deployApp, version, component);
+                     // will uncomment this later       
+                    // appClient.addVersionToSnapshot(snapshot, deployApp, version, component);
                 }
             }
 
