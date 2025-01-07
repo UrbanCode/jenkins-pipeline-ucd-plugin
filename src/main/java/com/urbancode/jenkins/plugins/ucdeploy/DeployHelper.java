@@ -523,10 +523,9 @@ public class DeployHelper {
             listener.getLogger().println("[ !!!!! finally creating the snapshot !!!!! ]");
             listener.getLogger().println("[ ##### deployEnv #####] '" + deployEnv + "'");
             listener.getLogger().println("[ ##### deployApp #####] '" + deployApp + "'");
-            listener.getLogger().println("[ ##### snapshotName #####] '" + snapshotName + "'");
             listener.getLogger().println("[ ##### deployDesc #####] '" + deployDesc + "'");
             String snapshotName = envVars.expand(createSnapshot.getSnapshotName());
-
+            listener.getLogger().println("[ ##### snapshotName #####] '" + snapshotName + "'");
             listener.getLogger().println("Creating environment snapshot '" + snapshotName
                     + "' in UrbanCode Deploy.");
             appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
