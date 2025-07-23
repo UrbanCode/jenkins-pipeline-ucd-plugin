@@ -340,6 +340,7 @@ public class DeployHelper {
         String deployReqProps = envVars.expand(deployBlock.getDeployReqProps());
         String deployDesc = envVars.expand(deployBlock.getDeployDesc());
         CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshot();
+        listener.getLogger().println(" !!!!! createSnapshot !!!!! '" + createSnapshot + "'");
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
@@ -377,7 +378,7 @@ public class DeployHelper {
 
         /* Create snapshot preemptively to deploy */
         if (doCreateSnapshot && createSnapshot.getDeployWithSnapshot()) {
-            listener.getLogger().println("[ !!!!! IF !!!!! ]");
+            listener.getLogger().println("[ !!!!! IF !!!!!!!! ]");
             snapshot = envVars.expand(createSnapshot.getSnapshotName());
             doCreateSnapshot = false; // Set to false so reactive snapshot isn't created also
 
@@ -524,8 +525,7 @@ public class DeployHelper {
             String snapshotName = envVars.expand(createSnapshot.getSnapshotName());
             listener.getLogger().println("Creating environment snapshot '" + snapshotName
                     + "' in UrbanCode Deploy.");
-            // will uncomment later        
-            // appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
+            appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
             listener.getLogger().println("Successfully created environment snapshot.");
         }
 
