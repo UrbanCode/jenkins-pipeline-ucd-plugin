@@ -272,7 +272,7 @@ public class DeployHelper {
         private Boolean includeOnlyDeployVersions;
 
         @DataBoundConstructor
-        public CreateSnapshotBlock(String snapshotName, Boolean deployWithSnapshot, Boolean updateSnapshotComp, Boolean includeOnlyDeployVersions) {
+        public CreateSnapshotBlock(String snapshotName, Boolean deployWithSnapshot, Boolean updateSnapshotComp, Boolean createSnapshotComp, Boolean includeOnlyDeployVersions) {
             this.snapshotName = snapshotName;
             this.deployWithSnapshot = deployWithSnapshot;
             this.updateSnapshotComp = updateSnapshotComp;
@@ -304,7 +304,7 @@ public class DeployHelper {
         }
         
         // Added
-        public Boolean createSnapshotComp() {
+        public Boolean getCreateSnapshotComp() {
             if (createSnapshotComp != null) {
                 return createSnapshotComp;
             }
@@ -399,6 +399,8 @@ public class DeployHelper {
                 if (createSnapshot.getIncludeOnlyDeployVersions()) {
                     listener.getLogger().println("[5555555555 - IF]");
                     appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
+                } else if (createSnapshot.getCreateSnapshotComp()) {
+                    listener.getLogger().println("[We need to deploy only component version]");
                 } else {
                     listener.getLogger().println("[5555555555 - ELSE]");
                     listener.getLogger().println("[snapshot---11111] '" + snapshot + "'");
