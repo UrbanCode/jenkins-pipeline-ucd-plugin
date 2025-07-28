@@ -317,6 +317,7 @@ public class DeployHelper {
      * @throws IOException
      */
     public void runDeployment(DeployBlock deployBlock) throws IOException, JSONException {
+        listener.getLogger().println("[To create new build for test]");
         String deployApp = envVars.expand(deployBlock.getDeployApp());
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
