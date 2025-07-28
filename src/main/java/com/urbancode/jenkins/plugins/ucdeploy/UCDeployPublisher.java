@@ -412,11 +412,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         return deploy.getCreateSnapshot();
     }
 
-    // Added
-    public boolean createSnapshotComponentChecked() {
-        return createSnapshotComp != null && createSnapshotComp;
-    }
-
     public Boolean createSnapshotChecked() {
         if (getCreateSnapshot() != null) {
             return true;
