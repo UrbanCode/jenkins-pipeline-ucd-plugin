@@ -353,6 +353,7 @@ public class DeployHelper {
 
         if (deployBlock.createSnapshotComponentChecked()) {
             listener.getLogger().println("[Checking if new feature is getting checked]");
+            listener.getLogger().println(" !!!!! getSnapshotComponent !!!!! '" + deployBlock.getSnapshotComponent() + "'");
         }
 
         // required fields
