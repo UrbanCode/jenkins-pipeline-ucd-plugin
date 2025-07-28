@@ -420,6 +420,20 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         return false;
     }
 
+    // Added
+    public CreateSnapshotBlock getCreateSnapshotComp() {
+        return deploy.getCreateSnapshotComp();
+    }
+
+    // Added
+    public Boolean createSnapshotCompChecked() {
+        if (getCreateSnapshotComp() != null) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     public String getSnapshotName() {
         String snapshotName = "";

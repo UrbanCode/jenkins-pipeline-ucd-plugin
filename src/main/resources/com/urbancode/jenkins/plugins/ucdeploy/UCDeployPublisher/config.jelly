@@ -144,10 +144,11 @@
             </f:optionalBlock>
             <f:optionalBlock name="createSnapshotComponent"
                              title="Create As New Snapshot with Component Versions"
-                             help="${helpURL}/deploy/create/help.html">
+                             help="${helpURL}/deploy/create/help.html" 
+                             checked="${instance.createSnapshotCompChecked()}">
               <f:block>
                 <div>
-                  <f:entry field="newSnapshotName" title="Snapshot Name" help="${helpURL}/deploy/create/comp.html">
+                  <f:entry field="createSnapshotComp" title="Snapshot Name" help="${helpURL}/deploy/create/comp.html">
                     <f:textbox/>
                   </f:entry>
                 </div>
