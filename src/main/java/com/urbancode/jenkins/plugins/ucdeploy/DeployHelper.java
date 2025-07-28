@@ -80,6 +80,7 @@ public class DeployHelper {
         private String deployProc;
         private Boolean skipWait;
         private CreateProcessBlock createProcess;
+        private CreateProcessBlock createSnapshotComponent;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
         private String deployReqProps;
@@ -93,6 +94,7 @@ public class DeployHelper {
             String deployProc,
             Boolean skipWait,
             CreateProcessBlock createProcess,
+            CreateProcessBlock createSnapshotComponent,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
             String deployReqProps,
@@ -104,6 +106,7 @@ public class DeployHelper {
             this.deployProc = deployProc;
             this.skipWait = skipWait;
             this.createProcess = createProcess;
+            this.createSnapshotComponent = createSnapshotComponent;
             this.createSnapshot = createSnapshot;
             this.deployVersions = deployVersions;
             this.deployReqProps = deployReqProps;
@@ -158,6 +161,19 @@ public class DeployHelper {
             else {
                 return true;
             }
+        }
+
+        // Added
+        public CreateProcessBlock getSnapshotComponent() {
+            return createSnapshotComponent;
+        }
+
+        // Added
+        public Boolean createSnapshotComponentChecked() {
+            if (getSnapshotComponent() != null) {
+                return true;
+            }
+            return false;
         }
 
         public CreateSnapshotBlock getCreateSnapshot() {
@@ -333,6 +349,10 @@ public class DeployHelper {
         if (deployBlock.createProcessChecked()) {
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
             processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcess());
+        }
+
+        if (deployBlock.createSnapshotComponentChecked()) {
+            listener.getLogger().println("[Checking if new feature is getting checked]");
         }
 
         // required fields
