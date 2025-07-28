@@ -379,6 +379,8 @@ public class DeployHelper {
         /* Create snapshot preemptively to deploy */
         if (doCreateSnapshot && createSnapshot.getDeployWithSnapshot()) {
             listener.getLogger().println("[ !!!!! IF !!!!!!!! ]");
+            listener.getLogger().println("[getIncludeOnlyDeployVersions] '" + createSnapshot.getIncludeOnlyDeployVersions() + "'");
+            listener.getLogger().println("[getCreateSnapshotComp()] '" + createSnapshot.getCreateSnapshotComp() + "'");
             snapshot = envVars.expand(createSnapshot.getSnapshotName());
             doCreateSnapshot = false; // Set to false so reactive snapshot isn't created also
 
