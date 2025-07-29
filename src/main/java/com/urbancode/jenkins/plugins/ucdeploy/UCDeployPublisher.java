@@ -398,7 +398,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
 
-    public CreateProcessBlock getSnapshotComponent() {
+    public String getSnapshotComponent() {
         return deploy.getSnapshotComponent();
     }
    

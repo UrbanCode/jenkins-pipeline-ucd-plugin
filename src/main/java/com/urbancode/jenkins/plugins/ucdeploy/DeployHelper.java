@@ -80,7 +80,7 @@ public class DeployHelper {
         private String deployProc;
         private Boolean skipWait;
         private CreateProcessBlock createProcess;
-        private CreateProcessBlock createSnapshotComponent;
+        private String createSnapshotComponent;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
         private String deployReqProps;
@@ -94,7 +94,7 @@ public class DeployHelper {
             String deployProc,
             Boolean skipWait,
             CreateProcessBlock createProcess,
-            CreateProcessBlock createSnapshotComponent,
+            String createSnapshotComponent,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
             String deployReqProps,
@@ -163,7 +163,7 @@ public class DeployHelper {
             }
         }
 
-        public CreateProcessBlock getSnapshotComponent() {
+        public String getSnapshotComponent() {
             return createSnapshotComponent;
         }
 
