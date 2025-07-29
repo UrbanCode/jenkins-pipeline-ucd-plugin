@@ -343,9 +343,6 @@ public class DeployHelper {
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
-        listener.getLogger().println(" [deployDesc] '" + deployDesc + "'");
-        listener.getLogger().println(" [deployApp] '" + deployApp + "'");
-
         // create process
         if (deployBlock.createProcessChecked()) {
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
@@ -576,10 +573,34 @@ public class DeployHelper {
         listener.getLogger().println("End Application Property Fetching.");
     }
 
-    private void createSnapshotWithComponentVersions(String snapshot, String deployApp) throws IOException {
+    private void createSnapshotWithComponentVersions(String deployDesc, String deployApp) throws IOException {
         listener.getLogger().println("[coming from createSnapshotWithComponentVersions]");
-        listener.getLogger().println(" [snapshot] '" + snapshot + "'");
+        listener.getLogger().println(" [deployDesc] '" + deployDesc + "'");
         listener.getLogger().println(" [deployApp] '" + deployApp + "'");
+        
+        String snapshot = "new-snapshot-test"; // will make it dynamic , this is for tets     
+        String deployVersions = envVars.expand(deployBlock.getDeployVersions());
+        listener.getLogger().println(" [deployVersions] '" + deployVersions + "'");
+
+        Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
+        if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
+            listener.getLogger().println("[Warning] When deploying with a build environment snapshot,"
+                    + " you may not specify additional snapshots in the 'Snapshot/Component Versions' box."
+                    + " This field will be ignored for this deployment.");
+        }
+        else {
+            componentVersions = readComponentVersions(deployVersions);
+            listener.getLogger().println(" [componentVersions] '" + componentVersions + "'");
+        }
+
+        try{ 
+            listener.getLogger().println("[Creating snapshot using component version]");
+            appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);    
+        } catch (Exception e) {
+                listener.getLogger().println("[Error while creating snapshot with comp version]");
+                listener.getLogger().println(e);
+        }
+
     }
     private UUID deploy(
             String application,
