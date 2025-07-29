@@ -397,11 +397,11 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         return false;
     }
 
-    // Added
+
     public CreateProcessBlock getSnapshotComponent() {
         return deploy.getSnapshotComponent();
     }
-    // Added
+   
     public Boolean createSnapshotComponentChecked() {
         if (getSnapshotComponent() != null) {
             return true;

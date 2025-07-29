@@ -163,12 +163,10 @@ public class DeployHelper {
             }
         }
 
-        // Added
         public CreateProcessBlock getSnapshotComponent() {
             return createSnapshotComponent;
         }
 
-        // Added
         public Boolean createSnapshotComponentChecked() {
             if (getSnapshotComponent() != null) {
                 return true;
@@ -345,6 +343,9 @@ public class DeployHelper {
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
+        listener.getLogger().println(" [deployDesc] '" + deployDesc + "'");
+        listener.getLogger().println(" [deployApp] '" + deployApp + "'");
+
         // create process
         if (deployBlock.createProcessChecked()) {
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
@@ -383,6 +384,7 @@ public class DeployHelper {
 
         /* Create snapshot preemptively to deploy */
         if (doCreateSnapshot && createSnapshot.getDeployWithSnapshot()) {
+            listener.getLogger().println("[IFFF]");
             snapshot = envVars.expand(createSnapshot.getSnapshotName());
             doCreateSnapshot = false; // Set to false so reactive snapshot isn't created also
 
@@ -457,6 +459,7 @@ public class DeployHelper {
         }
         /* Deploy with component versions or a pre-existing snapshot */
         else {
+            listener.getLogger().println("[ELSE]");
             if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
                 if (deployVersions.contains("\n")) {
                     throw new AbortException("Only a single SNAPSHOT can be specified");
