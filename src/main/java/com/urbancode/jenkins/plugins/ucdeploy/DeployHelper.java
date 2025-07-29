@@ -582,24 +582,24 @@ public class DeployHelper {
         String deployVersions = envVars.expand(deployBlock.getDeployVersions());
         listener.getLogger().println(" [deployVersions] '" + deployVersions + "'");
 
-        Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
-        if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
-            listener.getLogger().println("[Warning] When deploying with a build environment snapshot,"
-                    + " you may not specify additional snapshots in the 'Snapshot/Component Versions' box."
-                    + " This field will be ignored for this deployment.");
-        }
-        else {
-            componentVersions = readComponentVersions(deployVersions);
-            listener.getLogger().println(" [componentVersions] '" + componentVersions + "'");
-        }
+        // Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
+        // if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
+        //     listener.getLogger().println("[Warning] When deploying with a build environment snapshot,"
+        //             + " you may not specify additional snapshots in the 'Snapshot/Component Versions' box."
+        //             + " This field will be ignored for this deployment.");
+        // }
+        // else {
+        //     componentVersions = readComponentVersions(deployVersions);
+        //     listener.getLogger().println(" [componentVersions] '" + componentVersions + "'");
+        // }
 
-        try{ 
-            listener.getLogger().println("[Creating snapshot using component version]");
-            appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);    
-        } catch (Exception e) {
-                listener.getLogger().println("[Error while creating snapshot with comp version]");
-                listener.getLogger().println(e);
-        }
+        // try{ 
+        //     listener.getLogger().println("[Creating snapshot using component version]");
+        //     appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);    
+        // } catch (Exception e) {
+        //         listener.getLogger().println("[Error while creating snapshot with comp version]");
+        //         listener.getLogger().println(e);
+        // }
 
     }
     private UUID deploy(
