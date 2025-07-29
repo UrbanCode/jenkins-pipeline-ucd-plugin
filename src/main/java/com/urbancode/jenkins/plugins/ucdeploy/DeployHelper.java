@@ -80,7 +80,7 @@ public class DeployHelper {
         private String deployProc;
         private Boolean skipWait;
         private CreateProcessBlock createProcess;
-        private String createSnapshotComponent;
+        private String snapshotComponent1;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
         private String deployReqProps;
@@ -94,7 +94,7 @@ public class DeployHelper {
             String deployProc,
             Boolean skipWait,
             CreateProcessBlock createProcess,
-            String createSnapshotComponent,
+            String snapshotComponent1,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
             String deployReqProps,
@@ -106,7 +106,7 @@ public class DeployHelper {
             this.deployProc = deployProc;
             this.skipWait = skipWait;
             this.createProcess = createProcess;
-            this.createSnapshotComponent = createSnapshotComponent;
+            this.snapshotComponent1 = snapshotComponent1;
             this.createSnapshot = createSnapshot;
             this.deployVersions = deployVersions;
             this.deployReqProps = deployReqProps;
@@ -164,7 +164,7 @@ public class DeployHelper {
         }
 
         public String getSnapshotComponent() {
-            return createSnapshotComponent;
+            return snapshotComponent1;
         }
 
         public Boolean createSnapshotComponentChecked() {
