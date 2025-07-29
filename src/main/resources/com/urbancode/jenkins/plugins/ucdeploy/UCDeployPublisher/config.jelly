@@ -148,7 +148,7 @@
                              checked="${instance.createSnapshotComponentChecked()}">
               <f:block>
                 <div>
-                  <f:entry field="snapshotComponent" title="Snapshot Name" help="${helpURL}/deploy/create/comp.html">
+                  <f:entry field="snapshotComponent1" title="Snapshot Name" help="${helpURL}/deploy/create/comp.html">
                     <f:textbox/>
                   </f:entry>
                 </div>
