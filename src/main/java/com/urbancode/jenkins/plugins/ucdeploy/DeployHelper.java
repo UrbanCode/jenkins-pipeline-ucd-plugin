@@ -354,6 +354,7 @@ public class DeployHelper {
 
         if (deployBlock.createSnapshotComponentChecked()) {
             listener.getLogger().println("[Checking if new feature is getting checked]");
+            createSnapshotWithComponentVersions(deployDesc, deployApp);
         }
 
         // required fields
@@ -575,6 +576,11 @@ public class DeployHelper {
         listener.getLogger().println("End Application Property Fetching.");
     }
 
+    private void createSnapshotWithComponentVersions(String snapshot, String deployApp) throws IOException {
+        listener.getLogger().println("[coming from createSnapshotWithComponentVersions]");
+        listener.getLogger().println(" [snapshot] '" + snapshot + "'");
+        listener.getLogger().println(" [deployApp] '" + deployApp + "'");
+    }
     private UUID deploy(
             String application,
             String appProcess,
