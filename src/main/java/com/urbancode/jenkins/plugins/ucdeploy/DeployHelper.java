@@ -343,7 +343,9 @@ public class DeployHelper {
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
-        // create process
+        listener.getLogger().println(" [deployBlock.getSnapshotComponent] '" + deployBlock.getSnapshotComponent() + "'");
+        
+         // create process
         if (deployBlock.createProcessChecked()) {
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
             processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcess());
@@ -579,8 +581,7 @@ public class DeployHelper {
         listener.getLogger().println(" [deployApp] '" + deployApp + "'");
         listener.getLogger().println(" [deployVersions] '" + deployVersions + "'");
 
-        String snapshot = "new-snapshot-test"; // will make it dynamic , this is for tets     
-        
+        String snapshot = "new-snapshot-test-01"; // will make it dynamic , this is for tets     
 
         Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
         if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
@@ -602,6 +603,7 @@ public class DeployHelper {
         }
 
     }
+
     private UUID deploy(
             String application,
             String appProcess,
