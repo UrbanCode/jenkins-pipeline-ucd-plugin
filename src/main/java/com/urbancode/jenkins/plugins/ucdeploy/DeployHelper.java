@@ -356,12 +356,11 @@ public class DeployHelper {
         CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshot();
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
-        
+
         CreateSnapshotComponentBlock createSnapshotComponent = deployBlock.getSnapshotComponent();
 
         String newSnapshotName = envVars.expand(createSnapshotComponent.getSnapshotNameForComp());
         listener.getLogger().println(" [newSnapshotName] '" + newSnapshotName + "'");
-        listener.getLogger().println(" [deployBlock.getSnapshotComponent] '" + deployBlock.getSnapshotComponent() + "'");
         
          // create process
         if (deployBlock.createProcessChecked()) {
@@ -371,7 +370,7 @@ public class DeployHelper {
 
         if (deployBlock.createSnapshotComponentChecked()) {
             listener.getLogger().println("[Checking if new feature is getting checked]");
-            createSnapshotWithComponentVersions(deployDesc, deployApp ,deployVersions);
+            createSnapshotWithComponentVersions(newSnapshotName, deployDesc, deployApp ,deployVersions);
         }
 
         // required fields
@@ -593,14 +592,14 @@ public class DeployHelper {
         listener.getLogger().println("End Application Property Fetching.");
     }
 
-    private void createSnapshotWithComponentVersions(String deployDesc, String deployApp, String deployVersions) throws IOException {
+    private void createSnapshotWithComponentVersions(String snapshot, String deployDesc, String deployApp, String deployVersions) throws IOException {
         listener.getLogger().println("[coming from createSnapshotWithComponentVersions]");
         listener.getLogger().println(" [deployDesc] '" + deployDesc + "'");
         listener.getLogger().println(" [deployApp] '" + deployApp + "'");
         listener.getLogger().println(" [deployVersions] '" + deployVersions + "'");
+        listener.getLogger().println(" [snapshot] '" + snapshot + "'");
 
-        String snapshot = "new-snapshot-test-01"; // will make it dynamic , this is for tets     
-
+    
         Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
         if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
             listener.getLogger().println("[Warning] When deploying with a build environment snapshot,"
