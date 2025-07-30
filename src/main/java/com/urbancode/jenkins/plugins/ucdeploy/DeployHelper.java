@@ -80,7 +80,7 @@ public class DeployHelper {
         private String deployProc;
         private Boolean skipWait;
         private CreateProcessBlock createProcess;
-        private CreateProcessBlock createSnapshotComponent;
+        private CreateSnapshotComponentBlock createSnapshotComponent;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
         private String deployReqProps;
@@ -94,7 +94,7 @@ public class DeployHelper {
             String deployProc,
             Boolean skipWait,
             CreateProcessBlock createProcess,
-            CreateProcessBlock createSnapshotComponent,
+            CreateSnapshotComponentBlock createSnapshotComponent,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
             String deployReqProps,
@@ -163,7 +163,7 @@ public class DeployHelper {
             }
         }
 
-        public CreateProcessBlock getSnapshotComponent() {
+        public CreateSnapshotComponentBlock getSnapshotComponent() {
             return createSnapshotComponent;
         }
 
@@ -323,6 +323,20 @@ public class DeployHelper {
         }
     }
 
+    public static class CreateSnapshotComponentBlock {
+        private String snapshotComponent1;
+
+        @DataBoundConstructor
+        public CreateSnapshotComponentBlock(String snapshotComponent1) {
+            this.snapshotComponent1 = snapshotComponent1;
+        }
+
+        public String getSnapshotNameForComp() {
+            return snapshotComponent1;
+        }
+    }
+
+
     /**
      * Deploys a version in IBM UrbanCode Deploys
      *
@@ -343,6 +357,10 @@ public class DeployHelper {
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
+        CreateSnapshotBlock createSnapshotComponent = deployBlock.getSnapshotComponent();
+
+        String newSnapshotName = envVars.expand(createSnapshotComponent.getSnapshotNameForComp());
+        listener.getLogger().println(" [newSnapshotName] '" + newSnapshotName + "'");
         listener.getLogger().println(" [deployBlock.getSnapshotComponent] '" + deployBlock.getSnapshotComponent() + "'");
         
          // create process

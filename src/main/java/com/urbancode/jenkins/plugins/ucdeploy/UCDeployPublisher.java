@@ -48,6 +48,7 @@ import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Push;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.DeployBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.CreateSnapshotBlock;
+import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.CreateSnapshotComponentBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper.VersionBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.UCDeployPublisher.UserBlock;
@@ -398,7 +399,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
 
-    public CreateProcessBlock getSnapshotComponent() {
+    public CreateSnapshotComponentBlock getSnapshotComponent() {
         return deploy.getSnapshotComponent();
     }
    
@@ -442,6 +443,17 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
         return snapshotName;
     }
+
+    public String getSnapshotNameForComp() {
+        String snapshotComponent1 = "";
+
+        if (getCreateSnapshot() != null) {
+            snapshotComponent1 = getSnapshotComponent().getSnapshotNameForComp();
+        }
+
+        return snapshotComponent1;
+    }
+
 
     public Boolean getDeployWithSnapshot() {
         if (getCreateSnapshot() != null) {
