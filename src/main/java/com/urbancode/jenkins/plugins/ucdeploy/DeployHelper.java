@@ -356,8 +356,8 @@ public class DeployHelper {
         CreateSnapshotBlock createSnapshot = deployBlock.getCreateSnapshot();
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
-
-        // CreateSnapshotComponentBlock createSnapshotComponent = deployBlock.getSnapshotComponent();
+        
+        CreateSnapshotComponentBlock createSnapshotComponent = deployBlock.getSnapshotComponent();
 
         String newSnapshotName = envVars.expand(createSnapshotComponent.getSnapshotNameForComp());
         listener.getLogger().println(" [newSnapshotName] '" + newSnapshotName + "'");
