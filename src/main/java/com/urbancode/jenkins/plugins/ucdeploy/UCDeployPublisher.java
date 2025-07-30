@@ -444,15 +444,15 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         return snapshotName;
     }
 
-    // public String getSnapshotNameForComp() {
-    //     String snapshotComponent1 = "";
+    public String getSnapshotNameForComp() {
+        String snapshotComponent1 = "";
 
-    //     if (getCreateSnapshot() != null) {
-    //         snapshotComponent1 = getSnapshotComponent().getSnapshotNameForComp();
-    //     }
+        if (getCreateSnapshot() != null) {
+            snapshotComponent1 = getSnapshotComponent().getSnapshotNameForComp();
+        }
 
-    //     return snapshotComponent1;
-    // }
+        return snapshotComponent1;
+    }
 
 
     public Boolean getDeployWithSnapshot() {
