@@ -94,6 +94,9 @@ node {
 
 ## Release Notes
 
+### Version 2.29
+ RFE-URBANCODE-I-682 Added ability to create snapshot using component version.
+
 ### Version 2.28
  Added Update Component version in existing Snapshot feature.
 
