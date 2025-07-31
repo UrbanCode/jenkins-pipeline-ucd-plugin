@@ -345,7 +345,6 @@ public class DeployHelper {
      * @throws IOException
      */
     public void runDeployment(DeployBlock deployBlock) throws IOException, JSONException {
-        listener.getLogger().println("[To create new build for test]");
         String deployApp = envVars.expand(deployBlock.getDeployApp());
         String deployEnv = envVars.expand(deployBlock.getDeployEnv());
         String deployProc = envVars.expand(deployBlock.getDeployProc());
@@ -401,7 +400,6 @@ public class DeployHelper {
 
         /* Create snapshot preemptively to deploy */
         if (doCreateSnapshot && createSnapshot.getDeployWithSnapshot()) {
-            listener.getLogger().println("[IFFF]");
             snapshot = envVars.expand(createSnapshot.getSnapshotName());
             doCreateSnapshot = false; // Set to false so reactive snapshot isn't created also
 
@@ -476,7 +474,6 @@ public class DeployHelper {
         }
         /* Deploy with component versions or a pre-existing snapshot */
         else {
-            listener.getLogger().println("[ELSE]");
             if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
                 if (deployVersions.contains("\n")) {
                     throw new AbortException("Only a single SNAPSHOT can be specified");
@@ -593,12 +590,6 @@ public class DeployHelper {
     }
 
     private void createSnapshotWithComponentVersions(String snapshot, String deployDesc, String deployApp, String deployVersions) throws IOException {
-        listener.getLogger().println("[coming from createSnapshotWithComponentVersions]");
-        listener.getLogger().println(" [deployDesc] '" + deployDesc + "'");
-        listener.getLogger().println(" [deployApp] '" + deployApp + "'");
-        listener.getLogger().println(" [deployVersions] '" + deployVersions + "'");
-        listener.getLogger().println(" [snapshot] '" + snapshot + "'");
-
     
         Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
         if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
@@ -608,12 +599,12 @@ public class DeployHelper {
         }
         else {
             componentVersions = readComponentVersions(deployVersions);
-            listener.getLogger().println(" [componentVersions] '" + componentVersions + "'");
         }
 
         try{ 
             listener.getLogger().println("[Creating snapshot using component version]");
-            appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);    
+            appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
+            listener.getLogger().println("[Snapshot created using component version]");    
         } catch (Exception e) {
                 listener.getLogger().println("[Error while creating snapshot with comp version]");
                 listener.getLogger().println(e);
