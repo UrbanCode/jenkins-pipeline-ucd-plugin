@@ -80,6 +80,7 @@ public class DeployHelper {
         private String deployProc;
         private Boolean skipWait;
         private CreateProcessBlock createProcess;
+        private CreateSnapshotComponentBlock createSnapshotComponent;
         private CreateSnapshotBlock createSnapshot;
         private String deployVersions;
         private String deployReqProps;
@@ -93,6 +94,7 @@ public class DeployHelper {
             String deployProc,
             Boolean skipWait,
             CreateProcessBlock createProcess,
+            CreateSnapshotComponentBlock createSnapshotComponent,
             CreateSnapshotBlock createSnapshot,
             String deployVersions,
             String deployReqProps,
@@ -104,6 +106,7 @@ public class DeployHelper {
             this.deployProc = deployProc;
             this.skipWait = skipWait;
             this.createProcess = createProcess;
+            this.createSnapshotComponent = createSnapshotComponent;
             this.createSnapshot = createSnapshot;
             this.deployVersions = deployVersions;
             this.deployReqProps = deployReqProps;
@@ -158,6 +161,17 @@ public class DeployHelper {
             else {
                 return true;
             }
+        }
+
+        public CreateSnapshotComponentBlock getSnapshotComponent() {
+            return createSnapshotComponent;
+        }
+
+        public Boolean createSnapshotComponentChecked() {
+            if (getSnapshotComponent() != null) {
+                return true;
+            }
+            return false;
         }
 
         public CreateSnapshotBlock getCreateSnapshot() {
@@ -309,6 +323,20 @@ public class DeployHelper {
         }
     }
 
+    public static class CreateSnapshotComponentBlock {
+        private String snapshotComponent1;
+
+        @DataBoundConstructor
+        public CreateSnapshotComponentBlock(String snapshotComponent1) {
+            this.snapshotComponent1 = snapshotComponent1;
+        }
+
+        public String getSnapshotNameForComp() {
+            return snapshotComponent1;
+        }
+    }
+
+
     /**
      * Deploys a version in IBM UrbanCode Deploys
      *
@@ -328,10 +356,20 @@ public class DeployHelper {
         Boolean doCreateSnapshot = deployBlock.createSnapshotChecked();
         Map<String, String> requestProperties = readProperties(deployReqProps);
 
-        // create process
+        CreateSnapshotComponentBlock createSnapshotComponent = deployBlock.getSnapshotComponent();
+
+        String newSnapshotName = envVars.expand(createSnapshotComponent.getSnapshotNameForComp());
+        listener.getLogger().println(" [newSnapshotName] '" + newSnapshotName + "'");
+        
+         // create process
         if (deployBlock.createProcessChecked()) {
             ProcessHelper processHelper = new ProcessHelper(appClient, listener, envVars);
             processHelper.createProcess(deployApp, deployProc, deployBlock.getCreateProcess());
+        }
+
+        if (deployBlock.createSnapshotComponentChecked()) {
+            listener.getLogger().println("[Checking if new feature is getting checked]");
+            createSnapshotWithComponentVersions(newSnapshotName, deployDesc, deployApp ,deployVersions);
         }
 
         // required fields
@@ -549,6 +587,29 @@ public class DeployHelper {
                 listener.getLogger().println(e);
         }
         listener.getLogger().println("End Application Property Fetching.");
+    }
+
+    private void createSnapshotWithComponentVersions(String snapshot, String deployDesc, String deployApp, String deployVersions) throws IOException {
+    
+        Map<String, List<String>> componentVersions = new HashMap<String, List<String>>();
+        if (deployVersions.toUpperCase().startsWith("SNAPSHOT=")) {
+            listener.getLogger().println("[Warning] When deploying with a build environment snapshot,"
+                    + " you may not specify additional snapshots in the 'Snapshot/Component Versions' box."
+                    + " This field will be ignored for this deployment.");
+        }
+        else {
+            componentVersions = readComponentVersions(deployVersions);
+        }
+
+        try{ 
+            listener.getLogger().println("[Creating snapshot using component version]");
+            appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
+            listener.getLogger().println("[Snapshot created using component version]");    
+        } catch (Exception e) {
+                listener.getLogger().println("[Error while creating snapshot with comp version]");
+                listener.getLogger().println(e);
+        }
+
     }
 
     private UUID deploy(
