@@ -358,8 +358,11 @@ public class DeployHelper {
 
         CreateSnapshotComponentBlock createSnapshotComponent = deployBlock.getSnapshotComponent();
 
-        String newSnapshotName = envVars.expand(createSnapshotComponent.getSnapshotNameForComp());
-        listener.getLogger().println(" [newSnapshotName] '" + newSnapshotName + "'");
+        String newSnapshotName = null;
+        if (deployBlock.createSnapshotComponentChecked()) {
+            newSnapshotName = envVars.expand(createSnapshotComponent.getSnapshotNameForComp());
+            listener.getLogger().println(" [newSnapshotName] '" + newSnapshotName + "'");
+        }
         
          // create process
         if (deployBlock.createProcessChecked()) {
