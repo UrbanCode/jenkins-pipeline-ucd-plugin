@@ -61,6 +61,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     private UserBlock altUser;
     private VersionBlock component;
     private DeployBlock deploy;
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UCDeployPublisher.class);
 
     /**
      * Constructor used for data-binding fields from the corresponding
@@ -105,31 +106,15 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean altUserChecked() {
-        if (altUser != null) {
-            return true;
-        }
-
-        return false;
+        return altUser != null;
     }
 
     public String getAltUsername() {
-        String altUsername = "";
-
-        if (altUser != null) {
-            altUsername = altUser.getAltUsername();
-        }
-
-        return altUsername;
+        return altUser != null ? altUser.getAltUsername() : "";
     }
 
     public Secret getAltPassword() {
-        Secret altPassword = Secret.fromString("");
-
-        if (altUser != null) {
-            altPassword = altUser.getAltPassword();
-        }
-
-        return altPassword;
+        return altUser != null ? altUser.getAltPassword() : Secret.fromString("");
     }
 
     public VersionBlock getComponent() {
@@ -137,203 +122,87 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean componentChecked() {
-        if (component != null) {
-            return true;
-        }
-
-        return false;
+        return component != null;
     }
 
     public String getComponentName() {
-        String componentName = "";
-
-        if (component != null) {
-            componentName = component.getComponentName();
-        }
-
-        return componentName;
+        return component != null ? component.getComponentName() : "";
     }
 
     public CreateComponentBlock getCreateComponent() {
-        if (component != null) {
-            return component.getCreateComponent();
-        }
-        else {
-            return null;
-        }
+        return component != null ? component.getCreateComponent() : null;
     }
 
     public Boolean createComponentChecked() {
-        if (getCreateComponent() != null) {
-            return true;
-        }
-
-        return false;
+        return getCreateComponent() != null;
     }
 
     public String getComponentTemplate() {
-        String componentTemplate = "";
-
-        if (getCreateComponent() != null) {
-            componentTemplate = getCreateComponent().getComponentTemplate();
-        }
-
-        return componentTemplate;
+        return getCreateComponent() != null ? getCreateComponent().getComponentTemplate() : "";
     }
 
     public String getComponentApplication() {
-        String componentApplication = "";
-
-        if (getCreateComponent() != null) {
-            componentApplication = getCreateComponent().getComponentApplication();
-        }
-
-        return componentApplication;
+        return getCreateComponent() != null ? getCreateComponent().getComponentApplication() : "";
     }
 
     public DeliveryBlock getDelivery() {
-        if (component != null) {
-            return component.getDelivery();
-        }
-        else {
-            return null;
-        }
+        return component != null ? component.getDelivery() : null;
     }
 
     public String getDeliveryType() {
-        String deliveryType = "";
-
-        if (getDelivery() != null) {
-            deliveryType = getDelivery().getDeliveryType().name();
-        }
-
-        return deliveryType;
+        return getDelivery() != null ? getDelivery().getDeliveryType().name() : "";
     }
 
     public String getPushVersion() {
-        String pushVersion = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            pushVersion = ((Push)getDelivery()).getPushVersion();
-        }
-
-        return pushVersion;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getPushVersion() : "";
     }
 
     public String getBaseDir() {
-        String baseDir = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            baseDir = ((Push)getDelivery()).getBaseDir();
-        }
-
-        return baseDir;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getBaseDir() : "";
     }
 
     public String getFileIncludePatterns() {
-        String fileIncludePatterns = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            fileIncludePatterns = ((Push)getDelivery()).getFileIncludePatterns();
-        }
-
-        return fileIncludePatterns;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getFileIncludePatterns() : "";
     }
 
     public String getFileExcludePatterns() {
-        String fileExcludePatterns = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            fileExcludePatterns = ((Push)getDelivery()).getFileExcludePatterns();
-        }
-
-        return fileExcludePatterns;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getFileExcludePatterns() : "";
     }
 
     public String getExtensions() {
-        String extensions = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            extensions = ((Push)getDelivery()).getExtensions();
-        }
-
-        return extensions;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getExtensions() : "";
     }
 
     public String getCharset() {
-        String charset = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            charset = ((Push)getDelivery()).getCharset();
-        }
-
-        return charset;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getCharset() : "";
     }
 
     public String getPushProperties() {
-        String pushProperties = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            pushProperties = ((Push)getDelivery()).getPushProperties();
-        }
-
-        return pushProperties;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getPushProperties() : "";
     }
 
     public String getPushDescription() {
-        String pushDescription = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            pushDescription = ((Push)getDelivery()).getPushDescription();
-        }
-
-        return pushDescription;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getPushDescription() : "";
     }
 
     public Boolean getPushIncremental() {
-        if (getDelivery() != null && getDelivery() instanceof Push) {
-            return ((Push)getDelivery()).getPushIncremental();
-        }
-
-        return false;
+        return (getDelivery() instanceof Push) ? ((Push)getDelivery()).getPushIncremental() : false;
     }
 
     public String getPullProperties() {
-        String pullProperties = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Pull) {
-            pullProperties = ((Pull)getDelivery()).getPullProperties();
-        }
-
-        return pullProperties;
+        return (getDelivery() instanceof Pull) ? ((Pull)getDelivery()).getPullProperties() : "";
     }
 
     public String getpullSourceType() {
-        String pullSourceType = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Pull) {
-            pullSourceType = ((Pull)getDelivery()).getPullSourceType();
-        }
-
-        return pullSourceType;
+        return (getDelivery() instanceof Pull) ? ((Pull)getDelivery()).getPullSourceType() : "";
     }
 
     public String getPullSourceProperties() {
-        String pullSourceProperties = "";
-
-        if (getDelivery() != null && getDelivery() instanceof Pull) {
-            pullSourceProperties = ((Pull)getDelivery()).getPullSourceProperties();
-        }
-
-        return pullSourceProperties;
+        return (getDelivery() instanceof Pull) ? ((Pull)getDelivery()).getPullSourceProperties() : "";
     }
 
     public Boolean getPullIncremental() {
-        if (getDelivery() != null && getDelivery() instanceof Pull) {
-            return ((Pull)getDelivery()).getPullIncremental();
-        }
-
-        return false;
+        return (getDelivery() instanceof Pull) ? ((Pull)getDelivery()).getPullIncremental() : false;
     }
 
     public DeployBlock getDeploy() {
@@ -341,49 +210,23 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean deployChecked() {
-        if (deploy != null) {
-            return true;
-        }
-
-        return false;
+        return deploy != null;
     }
 
     public String getDeployApp() {
-        String deployApp = "";
-
-        if (deploy != null) {
-            deployApp = deploy.getDeployApp();
-        }
-
-        return deployApp;
+        return deploy != null ? deploy.getDeployApp() : "";
     }
 
     public String getDeployEnv() {
-        String deployEnv = "";
-
-        if (deploy != null) {
-            deployEnv = deploy.getDeployEnv();
-        }
-
-        return deployEnv;
+        return deploy != null ? deploy.getDeployEnv() : "";
     }
 
     public String getDeployProc() {
-        String deployProc = "";
-
-        if (deploy != null) {
-            deployProc = deploy.getDeployProc();
-        }
-
-        return deployProc;
+        return deploy != null ? deploy.getDeployProc() : "";
     }
 
     public Boolean getSkipWait() {
-        if (deploy != null) {
-            return deploy.getSkipWait();
-        }
-
-        return false;
+        return deploy != null ? deploy.getSkipWait() : false;
     }
 
     public CreateProcessBlock getCreateProcess() {
@@ -391,34 +234,19 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean createProcessChecked() {
-        if (getCreateProcess() != null) {
-            return true;
-        }
-
-        return false;
+        return getCreateProcess() != null;
     }
-
 
     public CreateSnapshotComponentBlock getSnapshotComponent() {
         return deploy.getSnapshotComponent();
     }
-   
+
     public Boolean createSnapshotComponentChecked() {
-        if (getSnapshotComponent() != null) {
-            return true;
-        }
-        return false;
+        return getSnapshotComponent() != null;
     }
 
-
     public String getProcessComponent() {
-        String processComponent = "";
-
-        if (getCreateProcess() != null) {
-            processComponent = getCreateProcess().getProcessComponent();
-        }
-
-        return processComponent;
+        return getCreateProcess() != null ? getCreateProcess().getProcessComponent() : "";
     }
 
     public CreateSnapshotBlock getCreateSnapshot() {
@@ -426,110 +254,48 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     }
 
     public Boolean createSnapshotChecked() {
-        if (getCreateSnapshot() != null) {
-            return true;
-        }
-
-        return false;
+        return getCreateSnapshot() != null;
     }
 
-
     public String getSnapshotName() {
-        String snapshotName = "";
-
-        if (getCreateSnapshot() != null) {
-            snapshotName = getCreateSnapshot().getSnapshotName();
-        }
-
-        return snapshotName;
+        return getCreateSnapshot() != null ? getCreateSnapshot().getSnapshotName() : "";
     }
 
     public String getSnapshotNameForComp() {
-        String snapshotComponent1 = "";
-
-        if (getCreateSnapshot() != null) {
-            snapshotComponent1 = getSnapshotComponent().getSnapshotNameForComp();
-        }
-
-        return snapshotComponent1;
+        return getSnapshotComponent() != null ? getSnapshotComponent().getSnapshotNameForComp() : "";
     }
 
-
     public Boolean getDeployWithSnapshot() {
-        if (getCreateSnapshot() != null) {
-            return ((getCreateSnapshot()).getDeployWithSnapshot());
-        }
-
-        return false;
+        return getCreateSnapshot() != null ? (getCreateSnapshot()).getDeployWithSnapshot() : false;
     }
 
     public Boolean getUpdateSnapshotComp() {
-        if (getCreateSnapshot() != null) {
-            return ((getCreateSnapshot()).getUpdateSnapshotComp());
-        }
-
-        return false;
+        return getCreateSnapshot() != null ? (getCreateSnapshot()).getUpdateSnapshotComp() : false;
     }
-  
+
     public Boolean getIncludeOnlyDeployVersions() {
-        if (getCreateSnapshot() != null) {
-            return ((getCreateSnapshot()).getIncludeOnlyDeployVersions());
-        }
-        else {
-            return false;
-        }
-    }    
+        return getCreateSnapshot() != null ? (getCreateSnapshot()).getIncludeOnlyDeployVersions() : false;
+    }
 
     public String getDeployVersions() {
-        String deployVersions = "";
-
-        if (deploy != null) {
-            deployVersions = deploy.getDeployVersions();
-        }
-
-        return deployVersions;
+        return deploy != null ? deploy.getDeployVersions() : "";
     }
 
     public String getDeployReqProps() {
-        String deployReqProps = "";
-
-        if (deploy != null) {
-            deployReqProps = deploy.getDeployReqProps();
-        }
-
-        return deployReqProps;
+        return deploy != null ? deploy.getDeployReqProps() : "";
     }
 
     public String getDeployDesc() {
-        String deployDesc = "";
-
-        if (deploy != null) {
-            deployDesc = deploy.getDeployDesc();
-        }
-
-        return deployDesc;
+        return deploy != null ? deploy.getDeployDesc() : "";
     }
 
     public Boolean getDeployOnlyChanged() {
-        if (deploy.getDeployOnlyChanged() == null) {
-            return false;
-        }
-        else {
-            return getDeploy().getDeployOnlyChanged();
-        }
+        return deploy.getDeployOnlyChanged() == null ? false : getDeploy().getDeployOnlyChanged();
     }
 
-    /**
-     * This method returns the configured UCDeploySite object which match the
-     * siteName of the UCDeployPublisherer instance. (see Manage Hudson and
-     * System Configuration point UrbanDeploy)
-     *
-     * @return the matching UCDeploySite or null
-     */
     public UCDeploySite getSite() {
         UCDeploySite[] sites = GLOBALDESCRIPTOR.getSites();
         if (siteName == null && sites.length > 0) {
-            // default
             return sites[0];
         }
         for (UCDeploySite site : sites) {
@@ -540,46 +306,43 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param build
-     * @param launcher
-     * @param listener
-     * @return A boolean to represent if the build can continue
-     * @throws InterruptedException
-     * @throws java.io.IOException
-     *             {@inheritDoc}
-     * @see hudson.tasks.BuildStep#perform(hudson.model.Build, hudson.Launcher,
-     *      hudson.model.TaskListener)
-     */
     @Override
     public void perform(final Run<?, ?> build, FilePath workspace, Launcher launcher, final TaskListener listener)
             throws AbortException, InterruptedException, IOException {
         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
-                throw new AbortException("Skip artifacts upload to IBM UrbanCode Deploy - build failed or aborted.");
+            throw new AbortException("Skip artifacts upload to IBM UrbanCode Deploy - build failed or aborted.");
         }
 
+        // Log requested site name and resolution
+        listener.getLogger().println(String.format("[UCD] perform: requestedSiteName='%s'", getSiteName()));
         UCDeploySite udSite = getSite();
-        DefaultHttpClient udClient;  // not serializable
+        listener.getLogger().println(String.format("[UCD] perform: resolvedSite='%s', uri='%s'",
+                udSite != null ? udSite.getDisplayName() : "null",
+                udSite != null ? String.valueOf(udSite.getUri()) : "null"));
 
-        if (altUserChecked()) {
-            if (getAltUsername().equals("")) {
-                throw new AbortException("Alternative username is a required property when specifying the optional"
-                        + "'Run as Alternative User' property.");
-            }
+        // Decide client and log effective credentials (LOCAL DEBUG ONLY)
+        final boolean useAltUser = altUserChecked();
+        final String effUser = useAltUser ? getAltUsername() : (udSite != null ? udSite.getUser() : "null");
+        final String effPass = useAltUser
+                ? (getAltPassword() != null ? getAltPassword().getPlainText() : "null")
+                : (udSite != null && udSite.getPassword() != null ? udSite.getPassword().getPlainText() : "null");
 
-            listener.getLogger().println("Running job as alternative user '" + getAltUsername() + "'.");
+        listener.getLogger().println(String.format(
+                "[UCD] perform: clientSource='%s', user='%s', pass='%s', siteUri='%s'",
+                useAltUser ? "temp" : "cached",
+                effUser,
+                effPass,
+                udSite != null ? String.valueOf(udSite.getUri()) : "null"
+        ));
 
-            udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
-        }
-        else {
-            udClient = udSite.getClient();
-        }
-
+        DefaultHttpClient udClient = useAltUser
+                ? udSite.getTempClient(getAltUsername(), getAltPassword())
+                : udSite.getClient();
+        listener.getLogger().println("[UCD] perform: effClientId=" + System.identityHashCode(udClient) + ", usedPath=" + (altUser != null ? "tempClient" : "cachedClient"));
         EnvVars envVars = build.getEnvironment(listener);
 
-        if (componentChecked() ) {
+        if (componentChecked()) {
+            listener.getLogger().println("[UCD] component path: version create/push will run.");
             String buildUrl = Hudson.getInstance().getRootUrl() + build.getUrl();
             PublishArtifactsCallable task = new PublishArtifactsCallable(
                     buildUrl,
@@ -589,14 +352,21 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
                     getComponent(),
                     envVars,
                     listener);
-
             workspace.act(task);
         }
 
         if (deployChecked()) {
+            listener.getLogger().println(String.format(
+                    "[UCD] deploy path: app='%s', env='%s', proc='%s', versions='%s'",
+                    getDeployApp(), getDeployEnv(), getDeployProc(), getDeployVersions()
+            ));
+            listener.getLogger().println(String.format(
+                    "[UCD] deploy path: using user='%s', pass='%s', uri='%s'",
+                    effUser, effPass, String.valueOf(udSite.getUri())
+            ));
+
             DeployHelper deployHelper = new DeployHelper(udSite.getUri(), udClient, listener, envVars, udSite.isSkipProps());
 
-            /* Throw AbortException so that Jenkins will mark job as faulty */
             try {
                 deployHelper.runDeployment(getDeploy());
             }
@@ -662,7 +432,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             this.buildUrl = buildUrl;
             this.buildName = buildName;
             this.udSite = udSite;
-            this.altUser = altUser; // used to acquire udClient in a serializable environment
+            this.altUser = altUser;
             this.component = component;
             this.envVars = envVars;
             this.listener = listener;
@@ -679,13 +449,36 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         @Override
         public Boolean invoke(File workspace, VirtualChannel node) throws IOException, InterruptedException {
             DefaultHttpClient udClient;
+            final boolean useAlt = (altUser != null);
+            final String effUser = useAlt ? altUser.getAltUsername() : udSite.getUser();
+            final String effPass = useAlt
+                    ? (altUser.getAltPassword() != null ? altUser.getAltPassword().getPlainText() : "null")
+                    : (udSite.getPassword() != null ? udSite.getPassword().getPlainText() : "null");
 
-            if (altUser != null) {
+            listener.getLogger().println(String.format(
+                    "[UCD] push path: clientSource='%s', user='%s', pass='%s', siteUri='%s'",
+                    useAlt ? "temp" : "cached",
+                    effUser,
+                    effPass,
+                    String.valueOf(udSite.getUri())
+            ));
+
+            if (useAlt) {
                 udClient = udSite.getTempClient(altUser.getAltUsername(), altUser.getAltPassword());
             }
             else {
                 udClient = udSite.getClient();
             }
+
+            // Summarize push params
+            listener.getLogger().println(String.format(
+                    "[UCD] push params: component='%s', deliveryType='%s', version='%s', baseDir='%s', includes='%s'",
+                    component.getComponentName(),
+                    (component.getDelivery() != null ? component.getDelivery().getDeliveryType().name() : "null"),
+                    (component.getDelivery() instanceof Push ? ((Push)component.getDelivery()).getPushVersion() : ""),
+                    (component.getDelivery() instanceof Push ? ((Push)component.getDelivery()).getBaseDir() : ""),
+                    (component.getDelivery() instanceof Push ? ((Push)component.getDelivery()).getFileIncludePatterns() : "")
+            ));
 
             VersionHelper versionHelper = new VersionHelper(udSite.getUri(), udClient, listener, envVars);
             versionHelper.createVersion(component, "Jenkins Build " + buildName, buildUrl);
