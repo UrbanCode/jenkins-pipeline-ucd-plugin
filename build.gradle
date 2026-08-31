@@ -4,10 +4,23 @@
  * The Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
-
-import groovy.util.XmlSlurper
+import groovy.xml.XmlSlurper
+buildscript {
+    repositories {
+        maven {
+            url "https://repo.jenkins-ci.org/public/"
+        }
+    }
+}
 plugins {
-  id "org.jenkins-ci.jpi" version "0.16.0"
+  id "org.jenkins-ci.jpi" version "0.43.0"
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xlint:-options'
 }
 
 group = "com.urbancode.ds.jenkins.plugins"
@@ -15,7 +28,7 @@ version = getVersion()
 description = "Publish artifacts into an IBM UrbanCode Deploy component as a build step."
 
 jenkinsPlugin {
-    coreVersion = "1.587"                                         // Version of Jenkins core this plugin depends on.
+    coreVersion = "1.587"                                      // Version of Jenkins core this plugin depends on.
     displayName = "IBM UrbanCode Deploy Jenkins Pipeline Plugin" // Human-readable name of plugin.
     url = "https://developer.ibm.com/urbancode/plugin/jenkins-2-0/" // URL for plugin on Jenkins wiki or elsewhere.
     gitHubUrl = "https://github.com/IBM-UrbanCode"                // Plugin URL on GitHub. Optional.
@@ -44,21 +57,22 @@ repositories {
 }
 
 dependencies {
-    compile 'com.ibm.urbancode.commons:uDeployRestClient:+'
-    // compile 'com.ibm.urbancode.commons:CommonsFileUtils:+'
-    // compile 'com.ibm.urbancode.commons:HttpComponents-Util:+'
-    // compile 'com.ibm.urbancode.commons:CommonsUtil:+'
-    // compile 'com.sun.jersey:jersey-core:1.12'
-    // compile 'com.sun.jersey:jersey-client:1.12'
-    compile 'javax.ws.rs:jsr311-api:1.1.1'
-    // compile 'org.codehaus.jettison:jettison:1.1'
-    // compile 'commons-lang:commons-lang:2.5'
-    // compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
-    // compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3.4'
-    // compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.4'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'com.ibm.urbancode.commons:uDeployRestClient:+'
+    // implementation 'com.ibm.urbancode.commons:CommonsFileUtils:+'
+    // implementation 'com.ibm.urbancode.commons:HttpComponents-Util:+'
+    // implementation 'com.ibm.urbancode.commons:CommonsUtil:+'
+    // implementation 'com.sun.jersey:jersey-core:1.12'
+    // implementation 'com.sun.jersey:jersey-client:1.12'
+    implementation 'javax.ws.rs:jsr311-api:1.1.1'
+    // implementation 'org.codehaus.jettison:jettison:1.1'
+    // implementation 'commons-lang:commons-lang:2.5'
+    // implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
+    // implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3.4'
+    // implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.4'
 }
 
-def getVersion() {
+def static getVersion() {
     def pomFile = new XmlSlurper().parseText(new File("pom.xml").text)
     def version = pomFile.version.text()
     return version.replace('${env.buildLife}', "open")
