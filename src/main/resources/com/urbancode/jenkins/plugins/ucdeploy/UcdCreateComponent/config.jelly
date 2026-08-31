@@ -1,0 +1,37 @@
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <j:set var="helpURL" value="/plugin/ibm-ucdeploy-build-steps"/>
+
+  <f:entry title="IBM UrbanCode Deploy Server" help="${helpURL}/site.html">
+    <select class="setting-input" name="siteName">
+      <j:forEach var="s" items="${descriptor.getSites()}">
+        <f:option selected="${s.displayName==instance.siteName}">${s.displayName}</f:option>
+      </j:forEach>
+    </select>
+  </f:entry>
+
+  <f:entry title="Alternative Username (optional)" help="${helpURL}/altUser/alt-username.html">
+    <f:textbox field="altUsername"/>
+  </f:entry>
+  <f:entry title="Alternative Password (optional)" help="${helpURL}/altUser/alt-password.html">
+    <f:password field="altPassword"/>
+  </f:entry>
+
+  <f:entry field="componentName" title="Component Name" help="${helpURL}/create/component-name.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="componentTemplate" title="Component Template (optional)" help="${helpURL}/create/new/template.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="componentApplication" title="Add to Application (optional)" help="${helpURL}/create/new/app-name.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="componentTag" title="Component Tag (optional)" help="${helpURL}/create/tag.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="defaultVersionType" title="Default Version Type">
+    <select class="setting-input" name="defaultVersionType">
+      <f:option selected="${instance.defaultVersionType=='FULL'}">FULL</f:option>
+      <f:option selected="${instance.defaultVersionType=='INCREMENTAL'}">INCREMENTAL</f:option>
+    </select>
+  </f:entry>
+</j:jelly>

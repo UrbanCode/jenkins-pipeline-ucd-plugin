@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "https://repo.jenkins-ci.org/public/"
+        }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'ibm-ucdeploy-build-steps'

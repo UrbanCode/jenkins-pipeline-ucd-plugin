@@ -53,6 +53,16 @@ import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper.VersionBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.UCDeployPublisher.UserBlock;
 
+/**
+ * @deprecated Use the individual build steps instead:
+ * {@link UcdCreateComponentVersion} for creating component versions,
+ * {@link UcdDeploy} for deploying applications,
+ * {@link UcdCreateSnapshot} for creating snapshots,
+ * {@link UcdCreateProcess} for creating application processes,
+ * {@link UcdCreateComponent} for creating components.
+ * This class is kept for backward compatibility with existing pipeline scripts.
+ */
+@Deprecated
 public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public static final GlobalConfig.GlobalConfigDescriptor GLOBALDESCRIPTOR = GlobalConfig.getGlobalConfigDescriptor();
@@ -757,7 +767,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
          */
         @Override
         public String getDisplayName() {
-            return "Publish Artifacts to IBM UrbanCode Deploy";
+            return "UCD (Legacy) - Publish Artifacts to IBM UrbanCode Deploy";
         }
 
         /**

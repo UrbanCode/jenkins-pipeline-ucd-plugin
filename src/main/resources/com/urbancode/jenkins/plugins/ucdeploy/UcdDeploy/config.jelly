@@ -1,0 +1,43 @@
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <j:set var="helpURL" value="/plugin/ibm-ucdeploy-build-steps"/>
+
+  <f:entry title="IBM UrbanCode Deploy Server" help="${helpURL}/site.html">
+    <select class="setting-input" name="siteName">
+      <j:forEach var="s" items="${descriptor.getSites()}">
+        <f:option selected="${s.displayName==instance.siteName}">${s.displayName}</f:option>
+      </j:forEach>
+    </select>
+  </f:entry>
+
+  <f:entry title="Alternative Username (optional)" help="${helpURL}/altUser/alt-username.html">
+    <f:textbox field="altUsername"/>
+  </f:entry>
+  <f:entry title="Alternative Password (optional)" help="${helpURL}/altUser/alt-password.html">
+    <f:password field="altPassword"/>
+  </f:entry>
+
+  <f:entry field="deployApp" title="Application Name" help="${helpURL}/deploy/app.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="deployEnv" title="Environment Name" help="${helpURL}/deploy/env.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="deployProc" title="Application Process Name" help="${helpURL}/deploy/appproc.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="deployVersions" title="Component Versions" help="${helpURL}/deploy/versions.html">
+    <f:textarea/>
+  </f:entry>
+  <f:entry field="deployReqProps" title="Request Properties (optional)" help="${helpURL}/deploy/reqprops.html">
+    <f:textarea/>
+  </f:entry>
+  <f:entry field="deployDesc" title="Description" help="${helpURL}/deploy/desc.html">
+    <f:textbox default="Requested from Jenkins"/>
+  </f:entry>
+  <f:entry field="deployOnlyChanged" title="Only Changed Versions" help="${helpURL}/deploy/onlychanged.html">
+    <f:checkbox default="true"/>
+  </f:entry>
+  <f:entry field="skipWait" title="Skip Wait" help="${helpURL}/deploy/skipwait.html">
+    <f:checkbox/>
+  </f:entry>
+</j:jelly>

@@ -1,0 +1,40 @@
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <j:set var="helpURL" value="/plugin/ibm-ucdeploy-build-steps"/>
+
+  <f:entry title="IBM UrbanCode Deploy Server" help="${helpURL}/site.html">
+    <select class="setting-input" name="siteName">
+      <j:forEach var="s" items="${descriptor.getSites()}">
+        <f:option selected="${s.displayName==instance.siteName}">${s.displayName}</f:option>
+      </j:forEach>
+    </select>
+  </f:entry>
+
+  <f:entry title="Alternative Username (optional)" help="${helpURL}/altUser/alt-username.html">
+    <f:textbox field="altUsername"/>
+  </f:entry>
+  <f:entry title="Alternative Password (optional)" help="${helpURL}/altUser/alt-password.html">
+    <f:password field="altPassword"/>
+  </f:entry>
+
+  <f:entry field="snapshotName" title="Snapshot Name" help="${helpURL}/deploy/snapshot/name.html">
+    <f:textbox default="${BUILD_ID}"/>
+  </f:entry>
+  <f:entry field="applicationName" title="Application Name" help="${helpURL}/deploy/app.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="environmentName" title="Environment Name (optional)" help="${helpURL}/deploy/env.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="description" title="Description">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="useComponentVersions" title="Create From Component Versions">
+    <f:checkbox/>
+  </f:entry>
+  <f:entry field="componentVersions" title="Component Versions (Component:Version per line)">
+    <f:textarea/>
+  </f:entry>
+  <f:entry field="updateExisting" title="Update If Snapshot Already Exists">
+    <f:checkbox/>
+  </f:entry>
+</j:jelly>

@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
 public class DeployHelper {
     public static final Logger log = LoggerFactory.getLogger(DeployHelper.class);
     private ApplicationClient appClient;
+    private SnapshotHelper snapshotHelper;
     private TaskListener listener;
     private EnvVars envVars;
     private URI ucdUrl;
@@ -69,6 +70,7 @@ public class DeployHelper {
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars, boolean skipProps) {
         this.ucdUrl = ucdUrl;
     	appClient = new ApplicationClient(ucdUrl, httpClient);
+    	snapshotHelper = new SnapshotHelper(ucdUrl, httpClient, appClient);
         this.listener = listener;
         this.envVars = envVars;
         this.skipProps = skipProps;
@@ -252,7 +254,10 @@ public class DeployHelper {
         }
 
         public void createGlobalEnvironmentVariables(String key, String value) {
+            createGlobalEnvVar(key, value);
+        }
 
+        public static void createGlobalEnvVar(String key, String value) {
             Jenkins instance = Jenkins.getInstance();
 
             DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = instance.getGlobalNodeProperties();
@@ -436,7 +441,7 @@ public class DeployHelper {
             }
 
             listener.getLogger().println("Acquiring all versions of the snapshot.");
-            JSONArray snapshotVersions = appClient.getSnapshotVersions(snapshot, deployApp);
+            JSONArray snapshotVersions = snapshotHelper.getSnapshotVersions(snapshot, deployApp);
             Map<String, JSONArray> compVersionMap = new HashMap<String, JSONArray>();
 
             /* Create a map of component name to a list of its versions in the snapshot */
@@ -461,7 +466,7 @@ public class DeployHelper {
 
                         listener.getLogger().println("Removing past version '" + oldVersionName +
                                 "' of component '" + component + "' from snapshot.");
-                        appClient.removeVersionFromSnapshot(snapshot, deployApp, oldVersionId, component);
+                        snapshotHelper.removeVersionFromSnapshot(snapshot, deployApp, oldVersionId, component);
                     }
                 }
 
@@ -469,7 +474,7 @@ public class DeployHelper {
                 for (String version : entry.getValue()) {
                     listener.getLogger().println("Adding component version '" + version +
                             "' of component '" + component + "' to snapshot.");
-                    appClient.addVersionToSnapshot(snapshot, deployApp, version, component);
+                    snapshotHelper.addVersionToSnapshot(snapshot, deployApp, version, component);
                 }
             }
 
