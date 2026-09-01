@@ -12,9 +12,6 @@ import hudson.AbortException;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -72,9 +69,7 @@ public class SnapshotHelper {
         JSONObject snapshot = appClient.getSnapshot(applicationName, snapshotName);
         String snapshotId = snapshot.getString("id");
 
-        URI uri = UriBuilder.fromPath(ucdUrl.toString())
-                .path("rest").path("deploy").path("snapshot")
-                .path(snapshotId).path("versions").build();
+        URI uri = URI.create(ucdUrl.toString() + "/rest/deploy/snapshot/" + snapshotId + "/versions");
 
         JSONObject body = new JSONObject();
         body.put("component", componentName);
@@ -105,9 +100,7 @@ public class SnapshotHelper {
         JSONObject snapshot = appClient.getSnapshot(applicationName, snapshotName);
         String snapshotId = snapshot.getString("id");
 
-        URI uri = UriBuilder.fromPath(ucdUrl.toString())
-                .path("rest").path("deploy").path("snapshot")
-                .path(snapshotId).path("versions").path(versionId).build();
+        URI uri = URI.create(ucdUrl.toString() + "/rest/deploy/snapshot/" + snapshotId + "/versions/" + versionId);
 
         HttpDelete method = new HttpDelete(uri);
         try {

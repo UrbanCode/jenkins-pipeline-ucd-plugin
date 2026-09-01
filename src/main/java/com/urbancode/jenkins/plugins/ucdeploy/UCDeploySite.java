@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
@@ -296,7 +295,7 @@ public class UCDeploySite implements Serializable {
      * @throws Exception
      */
     public void verifyConnection() throws Exception {
-        URI uri = UriBuilder.fromPath(url).path("rest").path("state").build();
+        URI uri = new URI(url + "/rest/state");
         executeJSONGet(uri);
     }
 

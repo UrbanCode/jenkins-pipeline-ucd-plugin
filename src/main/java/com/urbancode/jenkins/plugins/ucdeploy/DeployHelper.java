@@ -23,7 +23,6 @@ import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
 import jenkins.model.Jenkins;
-import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.lang.InterruptedException;
 import java.net.URI;
@@ -556,8 +555,8 @@ public class DeployHelper {
         
         listener.getLogger().println("Starting Application Property Fetching...");
         try{
-            URI uri = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").build();
-            String data = deployBlock.getMethod(uri.toString());
+            String uri = ucdUrl.toString() + "/rest/deploy/application";
+            String data = deployBlock.getMethod(uri);
             String applicationId ="";
             JSONArray array = new JSONArray(data);  
                 for(int i=0; i < array.length(); i++)   
@@ -569,8 +568,8 @@ public class DeployHelper {
                 }
             listener.getLogger().println("APPLICATION ID is " + applicationId);
             if(applicationId!= ""){
-                URI uri1 = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").path(applicationId).build();
-                String data1 = deployBlock.getMethod(uri1.toString());
+                String uri1 = ucdUrl.toString() + "/rest/deploy/application/" + applicationId;
+                String data1 = deployBlock.getMethod(uri1);
                 
                 JSONObject objectData = new JSONObject(data1);
                 JSONObject propSheet = objectData.getJSONObject("propSheet");
