@@ -8,7 +8,6 @@
 package com.urbancode.jenkins.plugins.ucdeploy;
 
 import hudson.Extension;
-import hudson.model.AbstractProject;
 import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
 import hudson.model.Job;
@@ -18,7 +17,6 @@ import hudson.util.FormFieldValidator;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 

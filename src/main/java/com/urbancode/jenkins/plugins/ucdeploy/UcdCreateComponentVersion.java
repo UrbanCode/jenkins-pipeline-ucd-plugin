@@ -23,15 +23,12 @@ import hudson.util.Secret;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
 import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.DeliveryBlock;
-import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Pull;
-import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Push;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper.VersionBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.ComponentHelper.CreateComponentBlock;
 

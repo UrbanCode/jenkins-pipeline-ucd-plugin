@@ -9,12 +9,9 @@ package com.urbancode.jenkins.plugins.ucdeploy;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import java.io.BufferedReader;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.model.TaskListener;
@@ -24,7 +21,6 @@ import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
 import jenkins.model.Jenkins;
 import java.io.IOException;
-import java.lang.InterruptedException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,21 +28,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper.CreateProcessBlock;
 import com.urbancode.ud.client.ApplicationClient;
-import javax.net.ssl.HttpsURLConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

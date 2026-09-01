@@ -20,7 +20,6 @@ import hudson.model.TaskListener;
 import java.io.IOException;
 
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 
 import com.urbancode.ud.client.ApplicationClient;
 

@@ -18,7 +18,6 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
