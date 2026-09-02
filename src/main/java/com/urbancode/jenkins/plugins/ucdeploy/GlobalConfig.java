@@ -107,7 +107,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
          */
         @Override
         public String getDisplayName() {
-            return "UrbanCode Deploy Server";
+            return "DevOps Deploy Server";
         }
 
         /**

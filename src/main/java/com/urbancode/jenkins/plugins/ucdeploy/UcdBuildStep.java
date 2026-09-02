@@ -116,12 +116,12 @@ public abstract class UcdBuildStep extends Builder implements SimpleBuildStep {
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
             throws AbortException, InterruptedException, IOException {
         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
-            throw new AbortException("Skipping UCD step - build already failed or aborted.");
+            throw new AbortException("Skipping DevOps Deploy step - build already failed or aborted.");
         }
 
         UCDeploySite udSite = getSite();
         if (udSite == null) {
-            throw new AbortException("No UCD server configured with name '" + siteName + "'. "
+            throw new AbortException("No DevOps Deploy server configured with name '" + siteName + "'. "
                     + "Check Manage Jenkins > System Configuration.");
         }
 

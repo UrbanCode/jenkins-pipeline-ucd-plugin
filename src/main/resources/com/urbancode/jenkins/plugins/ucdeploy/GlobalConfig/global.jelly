@@ -2,14 +2,14 @@
   <j:set var="helpURL" value="/plugin/ibm-ucdeploy-build-steps"/>
 
 
-  <f:section title="IBM UrbanCode Deploy Pipeline Plugin Configuration">
-    <f:entry title="UCD Servers">
+  <f:section title="DevOps Deploy Pipeline Plugin Configuration">
+    <f:entry title="DevOps Deploy Servers">
       <f:repeatable name="sites" var="site" items="${descriptor.sites}">
         <div>
           <f:entry title="Profile Name" help="${helpURL}/global/profile.html">
             <f:textbox name="profileName" value="${site.profileName}"/>
           </f:entry>
-          <f:entry title="IBM UrbanCode Deploy URL" help="${helpURL}/global/url.html">
+          <f:entry title="DevOps Deploy URL" help="${helpURL}/global/url.html">
             <f:textbox name="url" value="${site.url}"/>
           </f:entry>
           <f:entry title="User Name" help="${helpURL}/global/user.html">

@@ -763,7 +763,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
          */
         @Override
         public String getDisplayName() {
-            return "UCD (Legacy) - Publish Artifacts to IBM UrbanCode Deploy";
+            return "DevOps Deploy (Legacy) - Publish Artifacts";
         }
 
         /**

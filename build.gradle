@@ -26,7 +26,7 @@ tasks.withType(JavaCompile) {
 
 jenkinsPlugin {
     coreVersion = "2.164.3"                                         // Minimum Jenkins core version
-    displayName = "IBM UrbanCode Deploy Jenkins Pipeline Plugin"    // Human-readable name of plugin
+    displayName = "DevOps Deploy Jenkins Pipeline Plugin"    // Human-readable name of plugin
     url = "https://developer.ibm.com/urbancode/plugin/jenkins-2-0/"
     gitHubUrl = "https://github.com/IBM-UrbanCode"
     shortName = "ibm-ucdeploy-build-steps"

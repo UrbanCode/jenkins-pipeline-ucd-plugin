@@ -222,10 +222,10 @@ public class DeployHelper {
                 HttpResponse response = UCDeploySite.client.execute(method);
                 int responseCode = response.getStatusLine().getStatusCode();
                 if (responseCode == 401) {
-                    throw new Exception("Error connecting to IBM UrbanCode Deploy: Invalid user and/or password");
+                    throw new Exception("Error connecting to DevOps Deploy: Invalid user and/or password");
                 }
                 else if (responseCode != 200) {
-                    throw new Exception("Error connecting to IBM UrbanCode Deploy: " + responseCode + "using URI: " + uri.toString());
+                    throw new Exception("Error connecting to DevOps Deploy: " + responseCode + "using URI: " + uri.toString());
                 }
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
@@ -410,7 +410,7 @@ public class DeployHelper {
             }
 
             listener.getLogger().println("Creating environment snapshot '" + snapshot
-                    + "' in UrbanCode Deploy.");
+                    + "' in DevOps Deploy.");
 
             try {
                 if (createSnapshot.getIncludeOnlyDeployVersions()) {
@@ -423,7 +423,7 @@ public class DeployHelper {
                 String checkString = "Snapshot with name " + snapshot + " already exists for this application";
                 if (exMessage.contains(checkString) && createSnapshot.getUpdateSnapshotComp()) {
                     listener.getLogger().println("Snapshot already exist, updating environment snapshot '" + snapshot
-                    + "' in UrbanCode Deploy.");
+                    + "' in DevOps Deploy.");
                 } else {
                     throw new AbortException(ex.getMessage());
                 }
@@ -492,7 +492,7 @@ public class DeployHelper {
 
 
         listener.getLogger().println("Deployment request id is: '" + appProcUUID.toString() + "'");
-        listener.getLogger().println("Deployment is running. Waiting for UCD Server feedback.");
+        listener.getLogger().println("Deployment is running. Waiting for DevOps Deploy Server feedback.");
        
         long startTime = new Date().getTime();
         boolean processFinished = false;
@@ -524,7 +524,7 @@ public class DeployHelper {
         }
         else {
             listener.getLogger().println("'Skip Wait' option selected. Returning immmediately "
-                    + "without waiting for the UCD process to complete.");
+                    + "without waiting for the DevOps Deploy process to complete.");
         }
 
         /* create snapshot of environment reactively, as a result of successful deployment */
@@ -532,7 +532,7 @@ public class DeployHelper {
             String snapshotName = envVars.expand(createSnapshot.getSnapshotName());
 
             listener.getLogger().println("Creating environment snapshot '" + snapshotName
-                    + "' in UrbanCode Deploy.");
+                    + "' in DevOps Deploy.");
             appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
             listener.getLogger().println("Successfully created environment snapshot.");
         }
@@ -540,7 +540,7 @@ public class DeployHelper {
         long duration = (new Date().getTime() - startTime) / 1000;
 
         listener.getLogger().println("Finished the deployment in " + duration + " seconds");
-        listener.getLogger().println("The deployment result is " + deploymentResult + ". See the UrbanCode Deploy deployment " +
+        listener.getLogger().println("The deployment result is " + deploymentResult + ". See the DevOps Deploy deployment " +
                                      "logs for details : " + ucdUrl + "/#applicationProcessRequest/" + appProcUUID.toString());
         
         listener.getLogger().println("Starting Application Property Fetching...");
@@ -629,7 +629,7 @@ public class DeployHelper {
                 String propName = unfilledProps.getJSONObject(i).getString("name");
                 props.add(propName);
             }
-            throw new AbortException("Required UrbanCode Deploy Application Process request properties were "
+            throw new AbortException("Required DevOps Deploy Application Process request properties were "
                     + "not supplied: " + props.toString());
         }
 

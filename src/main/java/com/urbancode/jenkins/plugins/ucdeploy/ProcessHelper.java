@@ -69,15 +69,15 @@ public class ProcessHelper {
         // check if application process already exists
         JSONObject appProcObj = null;
         try {
-            listener.getLogger().println("Checking the UCD server for existing application process '" + applicationProcess + "'");
+            listener.getLogger().println("Checking the DevOps Deploy server for existing application process '" + applicationProcess + "'");
             appProcObj = appClient.getApplicationProcess(application, applicationProcess);
-            listener.getLogger().println("The application process already exists on the UCD server");
+            listener.getLogger().println("The application process already exists on the DevOps Deploy server");
         }
         catch (IOException ex) {
-            listener.getLogger().println("The application process does not exist on the UCD server");
+            listener.getLogger().println("The application process does not exist on the DevOps Deploy server");
         }
         catch (JSONException ex) {
-            throw new AbortException("An error occurred while checking the UCD server for the application process : "
+            throw new AbortException("An error occurred while checking the DevOps Deploy server for the application process : "
                     + ex.getMessage());
         }
 

@@ -175,7 +175,7 @@ public class UcdCreateSnapshot extends UcdBuildStep {
             }
         }
 
-        listener.getLogger().println("UCD Create Snapshot completed successfully.");
+        listener.getLogger().println("DevOps Deploy Create Snapshot completed successfully.");
     }
 
     private void updateSnapshotVersions(SnapshotHelper snapshotHelper, String snapshot, String app,
@@ -250,7 +250,7 @@ public class UcdCreateSnapshot extends UcdBuildStep {
 
         @Override
         public String getDisplayName() {
-            return "UCD - Create Snapshot";
+            return "DevOps Deploy - Create Snapshot";
         }
 
         @Override

@@ -166,7 +166,7 @@ public class UcdCreateComponentVersion extends UcdBuildStep {
                 listener);
 
         workspace.act(task);
-        listener.getLogger().println("UCD Create Component Version completed successfully.");
+        listener.getLogger().println("DevOps Deploy Create Component Version completed successfully.");
     }
 
     /**
@@ -220,7 +220,7 @@ public class UcdCreateComponentVersion extends UcdBuildStep {
 
         @Override
         public String getDisplayName() {
-            return "UCD - Create Component Version";
+            return "DevOps Deploy - Create Component Version";
         }
 
         @Override

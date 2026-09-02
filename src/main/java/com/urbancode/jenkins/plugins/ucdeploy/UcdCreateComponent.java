@@ -136,7 +136,7 @@ public class UcdCreateComponent extends UcdBuildStep {
             listener.getLogger().println("Tagged component '" + name + "' with '" + tag + "'.");
         }
 
-        listener.getLogger().println("UCD Create Component completed successfully.");
+        listener.getLogger().println("DevOps Deploy Create Component completed successfully.");
     }
 
     @Extension
@@ -144,7 +144,7 @@ public class UcdCreateComponent extends UcdBuildStep {
 
         @Override
         public String getDisplayName() {
-            return "UCD - Create Component";
+            return "DevOps Deploy - Create Component";
         }
 
         @Override

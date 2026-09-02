@@ -210,7 +210,7 @@ public class UcdDeploy extends UcdBuildStep {
 
         // Wait for result
         if (!getSkipWait()) {
-            listener.getLogger().println("Waiting for UCD Server feedback...");
+            listener.getLogger().println("Waiting for DevOps Deploy Server feedback...");
             long startTime = new Date().getTime();
             String deploymentResult = waitForDeployment(appClient, appProcUUID.toString());
             long duration = (new Date().getTime() - startTime) / 1000;
@@ -344,7 +344,7 @@ public class UcdDeploy extends UcdBuildStep {
 
         @Override
         public String getDisplayName() {
-            return "UCD - Deploy Application";
+            return "DevOps Deploy - Deploy Application";
         }
 
         @Override

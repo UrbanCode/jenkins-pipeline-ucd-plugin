@@ -95,7 +95,7 @@ public class UcdCreateProcess extends UcdBuildStep {
         ProcessHelper.CreateProcessBlock processBlock = new ProcessHelper.CreateProcessBlock(compProc);
         processHelper.createProcess(app, proc, processBlock);
 
-        listener.getLogger().println("UCD Create Process completed successfully.");
+        listener.getLogger().println("DevOps Deploy Create Process completed successfully.");
     }
 
     @Extension
@@ -103,7 +103,7 @@ public class UcdCreateProcess extends UcdBuildStep {
 
         @Override
         public String getDisplayName() {
-            return "UCD - Create Application Process";
+            return "DevOps Deploy - Create Application Process";
         }
 
         @Override

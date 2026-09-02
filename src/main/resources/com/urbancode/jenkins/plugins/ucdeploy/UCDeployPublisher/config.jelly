@@ -4,7 +4,7 @@
 
   <f:entry>
     <div>
-      <f:entry title="IBM UrbanCode Deploy Server" help="${helpURL}/site.html">
+      <f:entry title="DevOps Deploy Server" help="${helpURL}/site.html">
         <select class="setting-input" name="siteName">
           <j:forEach var="s" items="${descriptor.getSites()}">
             <f:option selected="${s.displayName==instance.siteName}">${s.displayName}</f:option>
