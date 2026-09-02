@@ -15,11 +15,9 @@ import hudson.model.Descriptor;
 
 import jenkins.model.Jenkins;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 

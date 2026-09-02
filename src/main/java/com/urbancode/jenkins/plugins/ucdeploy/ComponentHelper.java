@@ -131,15 +131,15 @@ public class ComponentHelper {
         // check if comopnent already exists
         UUID componentUUID = null;
         try {
-            listener.getLogger().println("Checking the UCD server for an existing component '" + componentName + "'");
+            listener.getLogger().println("Checking the DevOps Deploy server for an existing component '" + componentName + "'");
             componentUUID = compClient.getComponentUUID(componentName);
             listener.getLogger()
-                    .println("The component already exists on the UCD server with UUID '" + componentUUID + "'");
+                    .println("The component already exists on the DevOps Deploy server with UUID '" + componentUUID + "'");
         } catch (IOException ex) {
-            listener.getLogger().println("The component does not exist on the UCD server");
+            listener.getLogger().println("The component does not exist on the DevOps Deploy server");
         } catch (JSONException ex) {
             throw new AbortException(
-                    "An error occurred while checking the UCD server for the component : " + ex.getMessage());
+                    "An error occurred while checking the DevOps Deploy server for the component : " + ex.getMessage());
         }
 
         // create new component
@@ -179,7 +179,7 @@ public class ComponentHelper {
             // check for component
             boolean componentExists = false;
             try {
-                listener.getLogger().println("Checking the UCD server for existing component '" + componentName
+                listener.getLogger().println("Checking the DevOps Deploy server for existing component '" + componentName
                         + "' in " + "application '" + application + "'");
                 JSONArray serverComponents = appClient.getApplicationComponents(application);
                 for (int i = 0; i < serverComponents.length(); i++) {

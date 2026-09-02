@@ -9,12 +9,9 @@ package com.urbancode.jenkins.plugins.ucdeploy;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import java.io.BufferedReader;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.model.TaskListener;
@@ -23,9 +20,7 @@ import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
 import jenkins.model.Jenkins;
-import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
-import java.lang.InterruptedException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,21 +28,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper.CreateProcessBlock;
 import com.urbancode.ud.client.ApplicationClient;
-import javax.net.ssl.HttpsURLConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +50,7 @@ import org.slf4j.LoggerFactory;
 public class DeployHelper {
     public static final Logger log = LoggerFactory.getLogger(DeployHelper.class);
     private ApplicationClient appClient;
+    private SnapshotHelper snapshotHelper;
     private TaskListener listener;
     private EnvVars envVars;
     private URI ucdUrl;
@@ -69,6 +59,7 @@ public class DeployHelper {
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars, boolean skipProps) {
         this.ucdUrl = ucdUrl;
     	appClient = new ApplicationClient(ucdUrl, httpClient);
+    	snapshotHelper = new SnapshotHelper(ucdUrl, httpClient, appClient);
         this.listener = listener;
         this.envVars = envVars;
         this.skipProps = skipProps;
@@ -231,10 +222,10 @@ public class DeployHelper {
                 HttpResponse response = UCDeploySite.client.execute(method);
                 int responseCode = response.getStatusLine().getStatusCode();
                 if (responseCode == 401) {
-                    throw new Exception("Error connecting to IBM UrbanCode Deploy: Invalid user and/or password");
+                    throw new Exception("Error connecting to DevOps Deploy: Invalid user and/or password");
                 }
                 else if (responseCode != 200) {
-                    throw new Exception("Error connecting to IBM UrbanCode Deploy: " + responseCode + "using URI: " + uri.toString());
+                    throw new Exception("Error connecting to DevOps Deploy: " + responseCode + "using URI: " + uri.toString());
                 }
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
@@ -252,7 +243,10 @@ public class DeployHelper {
         }
 
         public void createGlobalEnvironmentVariables(String key, String value) {
+            createGlobalEnvVar(key, value);
+        }
 
+        public static void createGlobalEnvVar(String key, String value) {
             Jenkins instance = Jenkins.getInstance();
 
             DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = instance.getGlobalNodeProperties();
@@ -416,7 +410,7 @@ public class DeployHelper {
             }
 
             listener.getLogger().println("Creating environment snapshot '" + snapshot
-                    + "' in UrbanCode Deploy.");
+                    + "' in DevOps Deploy.");
 
             try {
                 if (createSnapshot.getIncludeOnlyDeployVersions()) {
@@ -429,14 +423,14 @@ public class DeployHelper {
                 String checkString = "Snapshot with name " + snapshot + " already exists for this application";
                 if (exMessage.contains(checkString) && createSnapshot.getUpdateSnapshotComp()) {
                     listener.getLogger().println("Snapshot already exist, updating environment snapshot '" + snapshot
-                    + "' in UrbanCode Deploy.");
+                    + "' in DevOps Deploy.");
                 } else {
                     throw new AbortException(ex.getMessage());
                 }
             }
 
             listener.getLogger().println("Acquiring all versions of the snapshot.");
-            JSONArray snapshotVersions = appClient.getSnapshotVersions(snapshot, deployApp);
+            JSONArray snapshotVersions = snapshotHelper.getSnapshotVersions(snapshot, deployApp);
             Map<String, JSONArray> compVersionMap = new HashMap<String, JSONArray>();
 
             /* Create a map of component name to a list of its versions in the snapshot */
@@ -461,7 +455,7 @@ public class DeployHelper {
 
                         listener.getLogger().println("Removing past version '" + oldVersionName +
                                 "' of component '" + component + "' from snapshot.");
-                        appClient.removeVersionFromSnapshot(snapshot, deployApp, oldVersionId, component);
+                        snapshotHelper.removeVersionFromSnapshot(snapshot, deployApp, oldVersionId, component);
                     }
                 }
 
@@ -469,7 +463,7 @@ public class DeployHelper {
                 for (String version : entry.getValue()) {
                     listener.getLogger().println("Adding component version '" + version +
                             "' of component '" + component + "' to snapshot.");
-                    appClient.addVersionToSnapshot(snapshot, deployApp, version, component);
+                    snapshotHelper.addVersionToSnapshot(snapshot, deployApp, version, component);
                 }
             }
 
@@ -498,7 +492,7 @@ public class DeployHelper {
 
 
         listener.getLogger().println("Deployment request id is: '" + appProcUUID.toString() + "'");
-        listener.getLogger().println("Deployment is running. Waiting for UCD Server feedback.");
+        listener.getLogger().println("Deployment is running. Waiting for DevOps Deploy Server feedback.");
        
         long startTime = new Date().getTime();
         boolean processFinished = false;
@@ -530,7 +524,7 @@ public class DeployHelper {
         }
         else {
             listener.getLogger().println("'Skip Wait' option selected. Returning immmediately "
-                    + "without waiting for the UCD process to complete.");
+                    + "without waiting for the DevOps Deploy process to complete.");
         }
 
         /* create snapshot of environment reactively, as a result of successful deployment */
@@ -538,7 +532,7 @@ public class DeployHelper {
             String snapshotName = envVars.expand(createSnapshot.getSnapshotName());
 
             listener.getLogger().println("Creating environment snapshot '" + snapshotName
-                    + "' in UrbanCode Deploy.");
+                    + "' in DevOps Deploy.");
             appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshotName, deployDesc);
             listener.getLogger().println("Successfully created environment snapshot.");
         }
@@ -546,13 +540,13 @@ public class DeployHelper {
         long duration = (new Date().getTime() - startTime) / 1000;
 
         listener.getLogger().println("Finished the deployment in " + duration + " seconds");
-        listener.getLogger().println("The deployment result is " + deploymentResult + ". See the UrbanCode Deploy deployment " +
+        listener.getLogger().println("The deployment result is " + deploymentResult + ". See the DevOps Deploy deployment " +
                                      "logs for details : " + ucdUrl + "/#applicationProcessRequest/" + appProcUUID.toString());
         
         listener.getLogger().println("Starting Application Property Fetching...");
         try{
-            URI uri = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").build();
-            String data = deployBlock.getMethod(uri.toString());
+            String uri = ucdUrl.toString() + "/rest/deploy/application";
+            String data = deployBlock.getMethod(uri);
             String applicationId ="";
             JSONArray array = new JSONArray(data);  
                 for(int i=0; i < array.length(); i++)   
@@ -564,8 +558,8 @@ public class DeployHelper {
                 }
             listener.getLogger().println("APPLICATION ID is " + applicationId);
             if(applicationId!= ""){
-                URI uri1 = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").path(applicationId).build();
-                String data1 = deployBlock.getMethod(uri1.toString());
+                String uri1 = ucdUrl.toString() + "/rest/deploy/application/" + applicationId;
+                String data1 = deployBlock.getMethod(uri1);
                 
                 JSONObject objectData = new JSONObject(data1);
                 JSONObject propSheet = objectData.getJSONObject("propSheet");
@@ -635,7 +629,7 @@ public class DeployHelper {
                 String propName = unfilledProps.getJSONObject(i).getString("name");
                 props.add(propName);
             }
-            throw new AbortException("Required UrbanCode Deploy Application Process request properties were "
+            throw new AbortException("Required DevOps Deploy Application Process request properties were "
                     + "not supplied: " + props.toString());
         }
 

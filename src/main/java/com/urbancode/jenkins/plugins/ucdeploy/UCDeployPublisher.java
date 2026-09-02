@@ -16,7 +16,6 @@ import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
-import hudson.model.Descriptor.FormException;
 import hudson.remoting.VirtualChannel;
 import hudson.model.Hudson;
 import hudson.model.Result;
@@ -45,14 +44,21 @@ import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper.CreateProcessBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.DeliveryBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Pull;
 import com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper.Push;
-import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.DeployBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.CreateSnapshotBlock;
 import com.urbancode.jenkins.plugins.ucdeploy.DeployHelper.CreateSnapshotComponentBlock;
-import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.VersionHelper.VersionBlock;
-import com.urbancode.jenkins.plugins.ucdeploy.UCDeployPublisher.UserBlock;
 
+/**
+ * @deprecated Use the individual build steps instead:
+ * {@link UcdCreateComponentVersion} for creating component versions,
+ * {@link UcdDeploy} for deploying applications,
+ * {@link UcdCreateSnapshot} for creating snapshots,
+ * {@link UcdCreateProcess} for creating application processes,
+ * {@link UcdCreateComponent} for creating components.
+ * This class is kept for backward compatibility with existing pipeline scripts.
+ */
+@Deprecated
 public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
     public static final GlobalConfig.GlobalConfigDescriptor GLOBALDESCRIPTOR = GlobalConfig.getGlobalConfigDescriptor();
@@ -757,7 +763,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
          */
         @Override
         public String getDisplayName() {
-            return "Publish Artifacts to IBM UrbanCode Deploy";
+            return "DevOps Deploy (Legacy) - Publish Artifacts";
         }
 
         /**

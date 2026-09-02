@@ -1,0 +1,89 @@
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <j:set var="helpURL" value="/plugin/ibm-ucdeploy-build-steps"/>
+
+  <f:entry title="DevOps Deploy Server" help="${helpURL}/site.html">
+    <select class="setting-input" name="siteName">
+      <j:forEach var="s" items="${descriptor.getSites()}">
+        <f:option selected="${s.displayName==instance.siteName}">${s.displayName}</f:option>
+      </j:forEach>
+    </select>
+  </f:entry>
+
+  <f:entry title="Alternative Username (optional)" help="${helpURL}/altUser/alt-username.html">
+    <f:textbox field="altUsername"/>
+  </f:entry>
+  <f:entry title="Alternative Password (optional)" help="${helpURL}/altUser/alt-password.html">
+    <f:password field="altPassword"/>
+  </f:entry>
+
+  <f:entry field="componentName" title="Component Name" help="${helpURL}/create/component-name.html">
+    <f:textbox/>
+  </f:entry>
+
+  <f:entry field="componentTag" title="Component Tag (optional)" help="${helpURL}/create/tag.html">
+    <f:textbox/>
+  </f:entry>
+
+  <f:entry field="createComponent" title="Auto-Create Component If Missing">
+    <f:checkbox/>
+  </f:entry>
+  <f:entry field="componentTemplate" title="Component Template (optional)" help="${helpURL}/create/new/template.html">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="componentApplication" title="Add to Application (optional)" help="${helpURL}/create/new/app-name.html">
+    <f:textbox/>
+  </f:entry>
+
+  <j:set var="currentDelivery" value="${instance.deliveryType}"/>
+  <f:dropdownList name="delivery" title="Delivery Mechanism" help="${helpURL}/create/delivery/help.html">
+    <f:dropdownListBlock title="Push Files"
+                         value="Push"
+                         selected="${currentDelivery=='Push'}"
+                         staplerClass="com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push">
+      <f:entry field="pushVersion" title="Version Name" help="${helpURL}/create/delivery/push/version.html">
+        <f:textbox default="${BUILD_NUMBER}"/>
+      </f:entry>
+      <f:entry field="baseDir" title="Base Artifact Directory" help="${helpURL}/create/delivery/push/basedir.html">
+        <f:textbox default="${WORKSPACE}"/>
+      </f:entry>
+      <f:entry field="fileIncludePatterns" title="Include Patterns" help="${helpURL}/create/delivery/push/includes.html">
+        <f:textarea default="**/*"/>
+      </f:entry>
+      <f:entry field="fileExcludePatterns" title="Exclude Patterns" help="${helpURL}/create/delivery/push/excludes.html">
+        <f:textarea/>
+      </f:entry>
+      <f:entry field="extensions" title="Extensions of files to Convert" help="${helpURL}/create/delivery/push/extensions.html">
+        <f:textarea/>
+      </f:entry>
+      <f:entry field="charset" title="Charset" help="${helpURL}/create/delivery/push/charset.html">
+        <f:textbox/>
+      </f:entry>
+      <f:entry field="pushProperties" title="Version Properties" help="${helpURL}/create/delivery/push/properties.html">
+        <f:textarea/>
+      </f:entry>
+      <f:entry field="pushDescription" title="Version Description" help="${helpURL}/create/delivery/push/description.html">
+        <f:textbox/>
+      </f:entry>
+      <f:entry field="pushIncremental" title="Incremental Version" help="${helpURL}/create/delivery/push/incremental.html">
+        <f:checkbox/>
+      </f:entry>
+    </f:dropdownListBlock>
+    <f:dropdownListBlock title="Trigger Import"
+                         value="Pull"
+                         selected="${currentDelivery=='Pull'}"
+                         staplerClass="com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Pull">
+      <f:entry field="pullProperties" title="Runtime Properties" help="${helpURL}/create/delivery/import/properties.html">
+        <f:textarea/>
+      </f:entry>
+      <f:entry field="pullSourceType" title="Source Configuration Type" help="${helpURL}/create/delivery/import/sourcetype.html">
+        <f:textbox/>
+      </f:entry>
+      <f:entry field="pullSourceProperties" title="Source Config Properties" help="${helpURL}/create/delivery/import/sourceprops.html">
+        <f:textarea/>
+      </f:entry>
+      <f:entry field="pullIncremental" title="Incremental Versions" help="${helpURL}/create/delivery/import/incremental.html">
+        <f:checkbox/>
+      </f:entry>
+    </f:dropdownListBlock>
+  </f:dropdownList>
+</j:jelly>
